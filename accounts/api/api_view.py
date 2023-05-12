@@ -90,10 +90,11 @@ class register(APIView):
     permission_classes = [AllowAny]
 
     def post(self,request):
-        if User.objects.filter(mob_number=request.data.get('mob_number'),is_active=False):
-            User.objects.get(mob_number=request.data.get('mob_number'),is_active=False).delete()
-        else:
-            return Response(error('user with this mob number already exists.'))
+        if User.objects.filter(mob_number=request.data.get('mob_number')):
+            if User.objects.filter(mob_number=request.data.get('mob_number'),is_active=False):
+                User.objects.get(mob_number=request.data.get('mob_number'),is_active=False).delete()
+            else:
+                return Response(error('user with this mob number already exists.'))
         ser_obj=UserRegisterSerializer(data=request.data)
 
         if ser_obj.is_valid():
