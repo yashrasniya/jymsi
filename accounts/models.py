@@ -27,6 +27,11 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
     mob_number = models.CharField(max_length=150, unique=True)
+    key = models.CharField(max_length=64)
+
     USERNAME_FIELD = 'mob_number'
     username = ''
     objects = UserManager()
+
+    def name(self):
+        return self.first_name+self.last_name
