@@ -35,6 +35,7 @@ class login(APIView):
         # generate OTP
         time_otp = pyotp.TOTP(user_obj[0].key)
         time_otp = time_otp.now()
+
         # if email != "1988888888":
         #     self.EmailSending(email,time_otp)
         return Response({'status': '200', 'message': 'Please verify your mobile to complete signup.', 'otp': time_otp},
