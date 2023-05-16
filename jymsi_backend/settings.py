@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'rest_framework',
+    'rest_framework_simplejwt',
 
 ]
 
@@ -107,24 +108,21 @@ from datetime import timedelta
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=30),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=50),
-
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
-    'USER_ID_FIELD': 'mob_number',
-    'USER_ID_CLAIM': 'user_id',
-    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
-
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'TOKEN_TYPE_CLAIM': 'token_type',
-    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
-
-    'JTI_CLAIM': 'jti',
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),  # by default
+    'REFRESH_TOKEN_LIFETIME': timedelta(minutes=15),  # by default
+    'UPDATE_LAST_LOGIN': True,
+    'AUTH_TOKEN_CLASSES': (
+        'rest_framework_simplejwt.tokens.AccessToken', 'rest_framework_simplejwt.tokens.RefreshToken',),
 }
 
-# Internationalization
-# https://docs.djangoproject.com/en/3.2/topics/i18n/
+REST_FRAMEWORK = {
+
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+
+}
 
 LANGUAGE_CODE = 'en-us'
 

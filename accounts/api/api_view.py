@@ -64,9 +64,11 @@ class Otp_varify(APIView):
             token = get_token(user)
 
             return Response({"user": data, "token": token},
-                            status=status.HTTP_200_OK)  # try:
-        user = User.objects.get(mob_number=mobile)
-        # except User.DoesNotExist:
+                            status=status.HTTP_200_OK)
+        try:
+            user = User.objects.get(mob_number=mobile)
+        except User.DoesNotExist as e:
+            return Response(error(f'{e}'))
         if user is None:
             return Response({'message': 'User does not exists'}, status.HTTP_400_BAD_REQUEST)
 
@@ -112,3 +114,12 @@ class register(APIView):
         else:
             return Response(error('some thing is messing',error=ser_obj.errors))
 
+
+class UserProfile(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self,request):
+
+        ser=UserSerializer.update(UserSerializer(),request.user,validated_data=request.data)
+
+        return Response(UserSerializer(request.user).data)
