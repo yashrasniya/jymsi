@@ -24,6 +24,9 @@ SECRET_KEY = 'django-insecure-6y#p+!i1bohdghws@93xc1h@ksr%st!iixlld)1b__f3!v_blm
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_ALL_ORIGINS = True  # any web side have access to my api
+CORS_URLS_REGEX = r'^/api/.*$'
 
 ALLOWED_HOSTS = ['184.72.212.75','www.zymsi.com/','*']
 
@@ -39,12 +42,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts',
+    'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
 
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

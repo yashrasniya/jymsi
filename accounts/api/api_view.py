@@ -123,3 +123,6 @@ class UserProfile(APIView):
         ser=UserSerializer.update(UserSerializer(),request.user,validated_data=request.data)
 
         return Response(UserSerializer(request.user).data)
+
+    def get(self,request):
+        return Response(UserSerializer(request.user).data)
