@@ -45,8 +45,8 @@ class Otp_varify(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        mobile = request.data.get('mob_number', None)
-        otp = request.data.get('otp', "")
+        mobile = request.GET.get('mob_number', None)
+        otp = request.GET.get('otp', "")
 
         if otp.__len__() != 6:
             return Response({'message': 'Invalid OTP'}, status.HTTP_400_BAD_REQUEST)
