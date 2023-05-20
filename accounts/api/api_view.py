@@ -7,6 +7,8 @@ from ..serializers import UserSerializer, UserRegisterSerializer
 import pyotp
 from ..utils import get_token
 from django.dispatch import Signal
+from jymsi_backend.utilities import send_sms
+
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -25,15 +27,16 @@ class login(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        email = request.GET.get('mob_number', None)
-        if not email:
+        mob_number = request.GET.get('mob_number', None)
+        if not mob_number:
             return Response(error('mobile not found', hi='hi'))
-        user_obj = User.objects.filter(mob_number=email)
+        user_obj = User.objects.filter(mob_number=mob_number)
         if not user_obj:
             return Response(error('User not found'))
         # generate OTP
         time_otp = pyotp.TOTP(user_obj[0].key)
         time_otp = time_otp.now()
+        send_sms(mob_number, time_otp)
 
         # if email != "1988888888":
         #     self.EmailSending(email,time_otp)
@@ -108,6 +111,7 @@ class register(APIView):
             user_obj.save()
             time_otp = pyotp.TOTP(user_obj.key)
             time_otp = time_otp.now()
+            send_sms(request.data.get('mob_number'), time_otp)
             return Response(
                 {'status': '200', 'message': 'Please verify your mobile to complete signup.', 'otp': time_otp},
                 status.HTTP_200_OK)
