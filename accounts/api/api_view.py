@@ -119,7 +119,7 @@ class UserProfile(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        ser = UserSerializer.update(UserSerializer(), request.user, validated_data=request.POST)
+        ser = UserSerializer.update(UserSerializer(), request.user, validated_data=request.GET)
 
         return Response(UserSerializer(request.user).data)
 
