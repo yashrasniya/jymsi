@@ -14,7 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         read_only=['id','mob_number']
-        validated_data._mutable=True
+        # validated_data._mutable=True
         for i in read_only:
             if validated_data.get(i,''):
                 validated_data.pop(i)
