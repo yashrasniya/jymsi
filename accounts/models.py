@@ -31,6 +31,7 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'mob_number'
     username = ''
+    is_partner=models.BooleanField(default=False)
     objects = UserManager()
 
     def name(self):

@@ -26,7 +26,7 @@ def get_short_lived_token(user):
 
 def get_token(user):
     refresh_token = RefreshToken.for_user(user)
-    refresh_token.set_exp(lifetime=timedelta(days=7))  # EXTEND lifetime
+    refresh_token.set_exp(lifetime=timedelta(days=30))  # EXTEND lifetime
     return str(refresh_token)
 
 

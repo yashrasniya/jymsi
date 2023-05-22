@@ -36,7 +36,7 @@ class login(APIView):
         # generate OTP
         time_otp = pyotp.TOTP(user_obj[0].key)
         time_otp = time_otp.now()
-        send_sms(mob_number, time_otp)
+        # send_sms(mob_number, time_otp)
 
         # if email != "1988888888":
         #     self.EmailSending(email,time_otp)
@@ -111,7 +111,7 @@ class register(APIView):
             user_obj.save()
             time_otp = pyotp.TOTP(user_obj.key)
             time_otp = time_otp.now()
-            send_sms(request.data.get('mob_number'), time_otp)
+            # send_sms(request.data.get('mob_number'), time_otp)
             return Response(
                 {'status': '200', 'message': 'Please verify your mobile to complete signup.', 'otp': time_otp},
                 status.HTTP_200_OK)
