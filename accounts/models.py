@@ -35,4 +35,4 @@ class User(AbstractUser):
     objects = UserManager()
 
     def name(self):
-        return self.first_name+self.last_name
+        return f"{self.first_name} {self.last_name}"

@@ -43,6 +43,7 @@ class Image_serializer(serializers.ModelSerializer):
     class Meta:
         model = Image
         fields = [
+            'id',
             'image'
         ]
     def update(self, instance, validated_data):

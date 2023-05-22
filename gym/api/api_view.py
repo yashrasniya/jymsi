@@ -10,8 +10,12 @@ from accounts.api.api_view import error
 class Gym_view(APIView):
     permission_classes = [AllowAny]
 
-    def get(self, request):
-        ser = gym_serializer(Gym.objects.all(), many=True)
+    def get(self, request,gym_id=None):
+        if not gym_id:
+
+            ser = gym_serializer(Gym.objects.all(), many=True)
+        else:
+            ser = gym_serializer(Gym.objects.filter(id=gym_id), many=True)
         return Response(ser.data)
 
 

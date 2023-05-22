@@ -5,6 +5,7 @@ from gym.api.api_view import Gym_view,facilities_view,Gym_create,Gym_Image_add,f
 
 urlpatterns = [
     path('gym/', Gym_view.as_view()),
+    path('gym/<int:gym_id>/', Gym_view.as_view()),
     path('gym/create/', Gym_create.as_view()),
     path('facilities/', facilities_view.as_view()),
     path('facilities/action/<int:facility_id>/', facilities_action.as_view()),
