@@ -9,7 +9,6 @@ from ..utils import get_token
 from django.dispatch import Signal
 from jymsi_backend.utilities import send_sms
 
-
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import smtplib, ssl
@@ -119,7 +118,7 @@ class register(APIView):
             return Response(error('some thing is messing', error=ser_obj.errors))
 
 
-class UserProfile(APIView):
+class UserProfileUpdate(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -127,6 +126,10 @@ class UserProfile(APIView):
         ser = UserRegisterSerializer.update(UserRegisterSerializer(), request.user, validated_data=request.data)
 
         return Response(UserSerializer(request.user).data)
+
+
+class UserProfile(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
         return Response(UserSerializer(request.user).data)
