@@ -2,9 +2,9 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from ..models import Gym, Facilities, Image, Trainer,Reviews
+from ..models import Gym, Facilities, Image, Trainer, Reviews, Deals
 from ..serializers import gym_serializer, facilities_serializer, Image_serializer, trainer_serializer, \
-    reviews_serializer
+    reviews_serializer, timing_serializer, Deals_serializer
 from accounts.api.api_view import error
 from accounts.authentication.CustomAuthentication import PartnerAuthentication
 
@@ -147,24 +147,24 @@ class Gym_trainer_action(APIView):
 class Review_action(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request,action,gym_id,review_id=None):
-        if not action in ['add','remove']:
+    def post(self, request, action, gym_id, review_id=None):
+        if not action in ['add', 'remove']:
             return Response(error('action must be add or remove'))
         if not Gym.objects.filter(id=gym_id):
             return Response(error("gym id not found! "))
         gym_obj = Gym.objects.get(id=gym_id)
-        if action=='add':
+        if action == 'add':
             ser = reviews_serializer(data=request.data)
             if ser.is_valid():
-                obj=ser.save(user=request.user)
+                obj = ser.save(user=request.user)
 
                 gym_obj.gym_reviews.add(obj)
                 return Response(gym_serializer(gym_obj).data)
 
             else:
                 return Response(error("error", error=ser.errors))
-        elif action=='remove':
-            review_obj=Reviews.objects.filter(id=review_id)
+        elif action == 'remove':
+            review_obj = Reviews.objects.filter(id=review_id)
             if review_obj:
                 review_obj[0].delete()
                 return Response(gym_serializer(gym_obj).data)
@@ -172,3 +172,69 @@ class Review_action(APIView):
                 return Response(error('review id not found!'))
 
 
+class timing_view(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        gym_obj, boll = partner_check(request)
+        if boll: return gym_obj
+        if gym_obj.gym_timing:
+            ser = timing_serializer(data=request.data)
+        else:
+            ser = timing_serializer(gym_obj.gym_timing, data=request.data)
+        if ser.is_valid():
+            obj = ser.save()
+            gym_obj.gym_timing = obj
+            if request.data.get('gym_holiday', ''):
+                print(gym_obj.gym_holiday, request.data.get('gym_holiday', ''))
+                gym_obj.gym_holiday = request.data.get('gym_holiday', '')
+            gym_obj.save()
+            return Response(gym_serializer(gym_obj).data)
+        else:
+            return Response(error("error", error=ser.errors))
+
+
+class Deals_action(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, action, deals_id=None):
+        gym_obj, boll = partner_check(request)
+        if boll: return gym_obj
+        if deals_id and not action == 'add':
+            deals_obj = gym_obj.gym_deals.filter(id=deals_id)
+            if not deals_obj:
+                return Response(error("deals id not found in yor zym "))
+        if action == 'add':
+            if len(gym_obj.gym_deals.all()) > 4:
+                return Response(error("you can not add more then 4 deals !"))
+            ser = Deals_serializer(data=request.data)
+            if ser.is_valid():
+                obj = ser.save()
+                gym_obj.gym_deals.add(obj)
+            else:
+                return Response(error("error", error=ser.errors))
+        elif action == 'remove':
+            deals_obj[0].delete()
+        elif action == 'edit':
+
+            ser = Deals_serializer(deals_obj[0], data=request.data)
+            if ser.is_valid():
+                ser.save()
+            else:
+                return Response(error("error", error=ser.errors))
+
+        return Response(gym_serializer(gym_obj).data)
+
+
+class personal_number(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        gym_obj, boll = partner_check(request)
+        if boll: return gym_obj
+        if not (request.data.get('gym_mobile_number', '') and request.data.get('gym_landLine_number', '')):
+            return Response(error('gym_mobile_number or  gym_landLine_number is missing '))
+        gym_obj.gym_mobile_number = request.data.get('gym_mobile_number', '')
+        gym_obj.gym_landLine_number = request.data.get('gym_landLine_number', '')
+        gym_obj.save()
+        return Response(gym_serializer(gym_obj).data)

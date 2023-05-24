@@ -9,6 +9,11 @@ class Gym(models.Model):
     gym_name = models.CharField(max_length=100)
     user = models.ForeignKey('accounts.User',on_delete=models.CASCADE,null=True)
     gym_address = models.TextField(max_length=100)
+    gym_state=models.CharField(max_length=50)
+    gym_city=models.CharField(max_length=50)
+    gym_PinCode=models.CharField(max_length=6)
+    gym_mobile_number=models.CharField(max_length=15)
+    gym_landLine_number=models.CharField(max_length=15)
     gym_description = models.TextField(max_length=1000)
     gym_images = models.ManyToManyField('Image')
     gym_link = models.URLField()
@@ -51,8 +56,8 @@ class Reviews(models.Model):
 
 class Timing(models.Model):
     type = models.CharField(choices=(
-        ('Morning', 'Morning'),
-        ('Evening', 'Evening'),
+        ('1', 'Morning'),
+        ('2', 'Evening'),
     ), max_length=40)
     opening = models.TimeField(blank=True)
     closing = models.TimeField(blank=True)
