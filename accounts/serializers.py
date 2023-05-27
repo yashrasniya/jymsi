@@ -14,6 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
             'email',
             'mob_number',
             'profile_img',
+            'is_partner',
         ]
 
 
@@ -36,12 +37,13 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             'last_name',
             'email',
             'mob_number',
-            'profile_img'
+            'profile_img',
+            'is_partner'
         ]
 
     def update(self, instance, validated_data):
         read_only = ['id', 'mob_number', 'name', 'profile_img']
-        image_add_db({'profile_img': instance.profile_img}, validated_data)
+        image_add_db({'profile_img': instance.profile_img}, validated_data,instance=instance)
         # validated_data._mutable=True
         for i in read_only:
             if validated_data.get(i, ''):

@@ -1,4 +1,3 @@
-from django.contrib import admin
 from django.urls import path
 from gym.api.api_view import (Gym_view, facilities_view,
                               Gym_create, Gym_Image_add,

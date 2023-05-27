@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from gym.models import Gym, Facilities, Trainer, Reviews, Image, Timing,Deals
+from gym.models import Gym, Facilities, Trainer, Reviews, Image, Timing, Deals
 
 from accounts.serializers import User_public_serializer, User
 from jymsi_backend.utilitys import image_add_db
@@ -14,9 +14,10 @@ class facilities_serializer(serializers.ModelSerializer):
             'icon',
         ]
 
+
 class Deals_serializer(serializers.ModelSerializer):
     class Meta:
-        model =Deals
+        model = Deals
         fields = [
             'id',
             'deal_name',
@@ -89,8 +90,10 @@ class gym_serializer(serializers.ModelSerializer):
     gym_trainer = trainer_serializer(many=True)
     gym_reviews = reviews_serializer(many=True)
     gym_images = Image_serializer(many=True)
-    gym_timing=timing_serializer()
-    gym_deals=Deals_serializer(many=True)
+    gym_timing = timing_serializer()
+    gym_deals = Deals_serializer(many=True)
+    review_count = serializers.SerializerMethodField()
+    price = serializers.SerializerMethodField()
 
     class Meta:
         model = Gym
@@ -107,6 +110,8 @@ class gym_serializer(serializers.ModelSerializer):
             'gym_facilities',
             'gym_trainer',
             'gym_reviews',
+            'price',
+            'review_count',
             'gym_timing',
             'gym_holiday',
             'gym_deals',
@@ -119,3 +124,13 @@ class gym_serializer(serializers.ModelSerializer):
             if validated_data.get(i, ''):
                 data[i] = validated_data.get(i)
         super().update(instance, data)
+
+    def get_review_count(self, obj):
+        return len(obj.gym_reviews.all())
+
+    def get_price(self, obj):
+        data=10000000000000
+        for i  in obj.gym_deals.all():
+            if data >int(i.discounted_price):
+                data=int(i.discounted_price)
+        return data
