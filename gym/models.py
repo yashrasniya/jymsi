@@ -64,7 +64,7 @@ class Timing(models.Model):
 
 
 class Deals(models.Model):
-    deal_name = models.CharField(max_length=200)
+    months = models.CharField(max_length=200)
     price = models.CharField(max_length=200)
     discounted_price = models.CharField(max_length=200)
     discount = models.CharField(max_length=200)

@@ -20,7 +20,7 @@ class Deals_serializer(serializers.ModelSerializer):
         model = Deals
         fields = [
             'id',
-            'deal_name',
+            'months',
             'price',
             'discounted_price',
             'discount',
@@ -118,7 +118,8 @@ class gym_serializer(serializers.ModelSerializer):
         ]
 
     def update(self, instance, validated_data):
-        only_data = ['gym_name', 'gym_address', 'gym_description', 'gym_link']
+        only_data = ['gym_name', 'gym_address', 'gym_description', 'gym_link',
+                     'gym_city','gym_state','gym_PinCode']
         data = {}
         for i in only_data:
             if validated_data.get(i, ''):
@@ -130,7 +131,14 @@ class gym_serializer(serializers.ModelSerializer):
 
     def get_price(self, obj):
         data=10000000000000
+
         for i  in obj.gym_deals.all():
-            if data >int(i.discounted_price):
-                data=int(i.discounted_price)
+            try:
+                m=int(i.months)
+                if data > int(i.discounted_price)/m:
+                    data = int(i.discounted_price)/m
+            except Exception as e:
+                pass
+        if data== 10000000000000:
+            return 0
         return data

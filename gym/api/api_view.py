@@ -148,7 +148,7 @@ class Review_action(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, action, gym_id, review_id=None):
-        if not action in ['add', 'remove']:
+        if not action in ['add', 'remove','edit']:
             return Response(error('action must be add or remove'))
         if not Gym.objects.filter(id=gym_id):
             return Response(error("gym id not found! "))
@@ -170,6 +170,20 @@ class Review_action(APIView):
                 return Response(gym_serializer(gym_obj).data)
             else:
                 return Response(error('review id not found!'))
+        elif action=='edit':
+            review_obj = Reviews.objects.filter(id=review_id,user=request.user)
+            if review_obj:
+                ser = reviews_serializer(review_obj[0],data=request.data)
+                if ser.is_valid():
+                    ser.save(user=request.user)
+                    return Response(gym_serializer(gym_obj).data)
+
+                else:
+                    return Response(error("error", error=ser.errors))
+            else:
+                return Response(error('review id not found in you profile!'))
+
+
 
 
 class timing_view(APIView):

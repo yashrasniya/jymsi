@@ -16,7 +16,6 @@ urlpatterns = [
     path('gym/trainer/<str:action>/<int:trainer_id>/', Gym_trainer_action.as_view()),
     path('gym/review/<str:action>/<int:gym_id>/', Review_action.as_view()),
     path('gym/review/<str:action>/<int:gym_id>/<int:review_id>/', Review_action.as_view()),
-    path('gym/review/<str:action>/<int:gym_id>/<int:review_id>/', Review_action.as_view()),
     path('gym/timing/', timing_view.as_view()),
     path('gym/deals/<str:action>/', Deals_action.as_view()),
     path('gym/deals/<str:action>/<int:deals_id>/', Deals_action.as_view()),
