@@ -2,7 +2,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from ..models import Gym, Facilities, Image, Trainer, Reviews, Deals
+from ..models import Gym, Facilities, Image, Trainer, Timing, Reviews, Deals
 from ..serializers import gym_serializer, facilities_serializer, Image_serializer, trainer_serializer, \
     reviews_serializer, timing_serializer, Deals_serializer
 from accounts.api.api_view import error
@@ -46,10 +46,11 @@ class Gym_create(APIView):
 
         return Response(gym_serializer(gym_obj).data)
 
+
 class My_Gym(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self,request):
+    def get(self, request):
         gym_obj, boll = partner_check(request)
         if boll: return gym_obj
         return Response(gym_serializer(gym_obj).data)
@@ -195,23 +196,37 @@ class Review_action(APIView):
 class timing_view(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
+    def post(self, request, action, timing_id=None):
         gym_obj, boll = partner_check(request)
         if boll: return gym_obj
-        if gym_obj.gym_timing:
-            ser = timing_serializer(data=request.data)
+        if request.data.get('gym_holiday', ''):
+            gym_obj.gym_holiday = request.data.get('gym_holiday', '')
+        gym_obj.save()
+        if not action in ['add', 'remove', 'edit']:
+            return Response(error('action must be add ,edit or remove'))
+
+        if action in ['edit', 'remove']:
+            if not timing_id or not gym_obj.gym_timing.all().filter(id=timing_id):
+                return Response(error('timing_id is must for edit or id not belong to you'))
+            time_obj = gym_obj.gym_timing.get(id=timing_id)
+        if action in ['add', 'edit']:
+            add = False
+            if action == 'edit':
+                ser = timing_serializer(time_obj, data=request.data)
+
+            else:
+                ser = timing_serializer(data=request.data)
+                add = True
+            if ser.is_valid():
+                obj = ser.save()
+                if add:
+                    gym_obj.gym_timing.add(obj)
+                gym_obj.save()
+            else:
+                return Response(error("error", error=ser.errors))
         else:
-            ser = timing_serializer(gym_obj.gym_timing, data=request.data)
-        if ser.is_valid():
-            obj = ser.save()
-            gym_obj.gym_timing = obj
-            if request.data.get('gym_holiday', ''):
-                print(gym_obj.gym_holiday, request.data.get('gym_holiday', ''))
-                gym_obj.gym_holiday = request.data.get('gym_holiday', '')
-            gym_obj.save()
-            return Response(gym_serializer(gym_obj).data)
-        else:
-            return Response(error("error", error=ser.errors))
+            time_obj.delete()
+        return Response(gym_serializer(gym_obj).data)
 
 
 class Deals_action(APIView):

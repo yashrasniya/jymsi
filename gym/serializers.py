@@ -50,6 +50,7 @@ class timing_serializer(serializers.ModelSerializer):
     class Meta:
         model = Timing
         fields = [
+            'id',
             'type',
             'opening',
             'closing',
@@ -90,7 +91,7 @@ class gym_serializer(serializers.ModelSerializer):
     gym_trainer = trainer_serializer(many=True)
     gym_reviews = reviews_serializer(many=True)
     gym_images = Image_serializer(many=True)
-    gym_timing = timing_serializer()
+    gym_timing = timing_serializer(many=True)
     gym_deals = Deals_serializer(many=True)
     review_count = serializers.SerializerMethodField()
     price = serializers.SerializerMethodField()

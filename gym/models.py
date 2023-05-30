@@ -20,7 +20,7 @@ class Gym(models.Model):
     gym_facilities = models.ManyToManyField('Facilities')
     gym_trainer = models.ManyToManyField('Trainer')
     gym_reviews = models.ManyToManyField('Reviews')
-    gym_timing = models.ForeignKey('Timing', on_delete=models.CASCADE,null=True)
+    gym_timing = models.ManyToManyField('Timing')
     gym_holiday = models.CharField(max_length=50)
     gym_deals = models.ManyToManyField('Deals')
 
