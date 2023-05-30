@@ -147,3 +147,29 @@ class gym_serializer(serializers.ModelSerializer):
         data['deals'] = Deals_serializer(data['deals']).data
 
         return data
+
+class my_gym(gym_serializer):
+
+    class Meta:
+        model = Gym
+        fields = [
+            'id',
+            'gym_name',
+            'gym_address',
+            'gym_PinCode',
+            'gym_city',
+            'gym_state',
+            'gym_images',
+            'gym_description',
+            'gym_mobile_number',
+            'gym_landLine_number',
+            'gym_link',
+            'gym_facilities',
+            'gym_trainer',
+            'gym_reviews',
+            'price',
+            'review_count',
+            'gym_timing',
+            'gym_holiday',
+            'gym_deals',
+        ]

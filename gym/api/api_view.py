@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from ..models import Gym, Facilities, Image, Trainer, Timing, Reviews, Deals
 from ..serializers import gym_serializer, facilities_serializer, Image_serializer, trainer_serializer, \
-    reviews_serializer, timing_serializer, Deals_serializer
+    reviews_serializer, timing_serializer, Deals_serializer,my_gym
 from accounts.api.api_view import error
 from accounts.authentication.CustomAuthentication import PartnerAuthentication
 
@@ -53,7 +53,7 @@ class My_Gym(APIView):
     def get(self, request):
         gym_obj, boll = partner_check(request)
         if boll: return gym_obj
-        return Response(gym_serializer(gym_obj).data)
+        return Response(my_gym(gym_obj).data)
 
 
 class Gym_Image_add(APIView):
