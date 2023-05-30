@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from gym.models import Gym, Facilities, Trainer, Reviews, Image, Timing, Deals
-
+from rest_framework.fields import empty
 from accounts.serializers import User_public_serializer, User
 from jymsi_backend.utilitys import image_add_db
 
@@ -149,27 +149,7 @@ class gym_serializer(serializers.ModelSerializer):
         return data
 
 class my_gym(gym_serializer):
-
-    class Meta:
-        model = Gym
-        fields = [
-            'id',
-            'gym_name',
-            'gym_address',
-            'gym_PinCode',
-            'gym_city',
-            'gym_state',
-            'gym_images',
-            'gym_description',
-            'gym_mobile_number',
-            'gym_landLine_number',
-            'gym_link',
-            'gym_facilities',
-            'gym_trainer',
-            'gym_reviews',
-            'price',
-            'review_count',
-            'gym_timing',
-            'gym_holiday',
-            'gym_deals',
-        ]
+    def __init__(self,instance=None, data=empty, **kwargs):
+        super(my_gym, self).__init__(instance=instance, data=data, **kwargs)
+        self.Meta.fields.append('gym_mobile_number')
+        self.Meta.fields.append('gym_landLine_number')
