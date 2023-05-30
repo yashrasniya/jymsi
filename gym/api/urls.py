@@ -2,12 +2,13 @@ from django.urls import path
 from gym.api.api_view import (Gym_view, facilities_view,
                               Gym_create, Gym_Image_add,
                               facilities_action, Gym_Image_remove,
-                              Gym_trainer_action, Review_action, timing_view,Deals_action,personal_number)
+                              Gym_trainer_action, Review_action, timing_view,Deals_action,personal_number,My_Gym)
 
 urlpatterns = [
     path('gym/', Gym_view.as_view()),
     path('gym/<int:gym_id>/', Gym_view.as_view()),
     path('gym/create/', Gym_create.as_view()),
+    path('gym/my/', My_Gym.as_view()),
     path('facilities/', facilities_view.as_view()),
     path('facilities/action/<int:facility_id>/', facilities_action.as_view()),
     path('gym/image/add/', Gym_Image_add.as_view()),

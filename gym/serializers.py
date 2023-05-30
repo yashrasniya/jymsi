@@ -119,7 +119,7 @@ class gym_serializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         only_data = ['gym_name', 'gym_address', 'gym_description', 'gym_link',
-                     'gym_city','gym_state','gym_PinCode']
+                     'gym_city', 'gym_state', 'gym_PinCode']
         data = {}
         for i in only_data:
             if validated_data.get(i, ''):
@@ -130,15 +130,19 @@ class gym_serializer(serializers.ModelSerializer):
         return len(obj.gym_reviews.all())
 
     def get_price(self, obj):
-        data=10000000000000
+        data = {'per_month': 10000000000000, 'deals': ''}
 
-        for i  in obj.gym_deals.all():
+        for i in obj.gym_deals.all():
             try:
-                m=int(i.months)
-                if data > int(i.discounted_price)/m:
-                    data = int(i.discounted_price)/m
+                m = int(i.months)
+                if data['per_month'] > int(i.discounted_price) / m:
+                    data['deals']=i
+                    data['per_month'] = "%.2f" % (int(i.discounted_price) / m)
+                    # data['per_month'] = int(i.discounted_price) / m
             except Exception as e:
                 pass
-        if data== 10000000000000:
+        if data['per_month'] == 10000000000000:
             return 0
+        data['deals'] = Deals_serializer(data['deals']).data
+
         return data

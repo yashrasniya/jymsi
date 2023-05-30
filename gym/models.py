@@ -27,7 +27,7 @@ class Gym(models.Model):
 
 class Facilities(models.Model):
     Facilities_name = models.CharField(max_length=50)
-    icon = models.ImageField(upload_to='facilities/icon', blank=False)
+    icon = models.FileField(upload_to='facilities/icon', blank=False)
 
 
 class Trainer(models.Model):
