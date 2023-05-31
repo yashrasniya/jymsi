@@ -95,11 +95,13 @@ class gym_serializer(serializers.ModelSerializer):
     gym_deals = Deals_serializer(many=True)
     review_count = serializers.SerializerMethodField()
     price = serializers.SerializerMethodField()
+    gym_rating = serializers.SerializerMethodField()
 
     class Meta:
         model = Gym
         fields = [
             'id',
+            'gym_ID',
             'gym_name',
             'gym_address',
             'gym_PinCode',
@@ -111,6 +113,7 @@ class gym_serializer(serializers.ModelSerializer):
             'gym_facilities',
             'gym_trainer',
             'gym_reviews',
+            'gym_rating',
             'price',
             'review_count',
             'gym_timing',
@@ -138,7 +141,7 @@ class gym_serializer(serializers.ModelSerializer):
                 m = int(i.months)
                 if data['per_month'] > int(i.discounted_price) / m:
                     data['deals']=i
-                    data['per_month'] = "%.2f" % (int(i.discounted_price) / m)
+                    data['per_month'] = round(int(i.discounted_price) / m)
                     # data['per_month'] = int(i.discounted_price) / m
             except Exception as e:
                 pass
@@ -147,6 +150,13 @@ class gym_serializer(serializers.ModelSerializer):
         data['deals'] = Deals_serializer(data['deals']).data
 
         return data
+    def get_gym_rating(self,obj):
+        round=0
+        for i in obj.gym_reviews.all():
+            round+=int(i.rating)
+        if obj.gym_reviews.all():
+            return round/len(obj.gym_reviews.all())
+        return 0
 
 class my_gym(gym_serializer):
     def __init__(self,instance=None, data=empty, **kwargs):

@@ -7,6 +7,7 @@ import datetime
 
 class Gym(models.Model):
     gym_name = models.CharField(max_length=100)
+    gym_ID = models.CharField(max_length=100)
     user = models.ForeignKey('accounts.User',on_delete=models.CASCADE,null=True)
     gym_address = models.TextField(max_length=100)
     gym_state=models.CharField(max_length=50)
@@ -23,6 +24,8 @@ class Gym(models.Model):
     gym_timing = models.ManyToManyField('Timing')
     gym_holiday = models.CharField(max_length=50)
     gym_deals = models.ManyToManyField('Deals')
+    visible=models.BooleanField(default=False)
+
 
 
 class Facilities(models.Model):

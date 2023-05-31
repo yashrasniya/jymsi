@@ -6,6 +6,7 @@ from ..models import Gym, Facilities, Image, Trainer, Timing, Reviews, Deals
 from ..serializers import gym_serializer, facilities_serializer, Image_serializer, trainer_serializer, \
     reviews_serializer, timing_serializer, Deals_serializer,my_gym
 from accounts.api.api_view import error
+import random
 from accounts.authentication.CustomAuthentication import PartnerAuthentication
 
 
@@ -24,9 +25,9 @@ class Gym_view(APIView):
     def get(self, request, gym_id=None):
         if not gym_id:
 
-            ser = gym_serializer(Gym.objects.all(), many=True)
+            ser = gym_serializer(Gym.objects.all(visible=True), many=True)
         else:
-            ser = gym_serializer(Gym.objects.filter(id=gym_id), many=True)
+            ser = gym_serializer(Gym.objects.filter(id=gym_id,visible=True), many=True)
         return Response(ser.data)
 
 
@@ -40,7 +41,13 @@ class Gym_create(APIView):
         if Gym.objects.filter(user=request.user):
             gym_obj = Gym.objects.filter(user=request.user)[0]
         else:
-            gym_obj = Gym.objects.create(user=request.user)
+            n=True
+            while n:
+                ID=random.randint(10000,99999)
+                if not Gym.objects.filter(gym_ID=ID):
+                    n=False
+
+            gym_obj = Gym.objects.create(user=request.user,gym_ID=ID)
 
         gym_serializer.update(gym_serializer(), gym_obj, request.data)
 
