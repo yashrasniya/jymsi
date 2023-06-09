@@ -153,7 +153,10 @@ class gym_serializer(serializers.ModelSerializer):
     def get_gym_rating(self,obj):
         round=0
         for i in obj.gym_reviews.all():
-            round+=int(i.rating)
+            try:
+                round+=int(i.rating)
+            except ValueError as e:
+                print(e)
         if obj.gym_reviews.all():
             return round/len(obj.gym_reviews.all())
         return 0
