@@ -27,6 +27,8 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
     mob_number = models.CharField(max_length=150, unique=True)
+    user_ID = models.CharField(max_length=100,null=True)
+
     key = models.CharField(max_length=64)
     profile_img=models.ImageField(upload_to="user/profile",blank=True)
     USERNAME_FIELD = 'mob_number'

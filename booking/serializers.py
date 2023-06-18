@@ -10,6 +10,7 @@ class Free_trial_serializers(serializers.ModelSerializer):
         model = Free_trial
         fields = [
             'id',
+            'booking_ID',
             'user',
             'gym',
             'type',

@@ -101,9 +101,13 @@ class register(APIView):
             else:
                 return Response(error('user with this mob number already exists.'))
         ser_obj = UserRegisterSerializer(data=request.data)
-
+        n=True
+        while n:
+            ID = random.randint(10000, 99999)
+            if not User.objects.filter(user_ID=ID):
+                n = False
         if ser_obj.is_valid():
-            ser_obj.save()
+            ser_obj.save(user_ID=ID)
             print(dir(ser_obj), ser_obj.data)
             user_obj = User.objects.get(mob_number=ser_obj.data['mob_number'])
             user_obj.is_active = False

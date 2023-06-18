@@ -8,6 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id',
+            'user_ID',
             'name',
             'first_name',
             'last_name',
@@ -22,7 +23,8 @@ class User_public_serializer(UserSerializer):
     class Meta:
         model = User
         fields = [
-            'id', 'name',
+            'id', 'name',            'user_ID',
+
             'profile_img',
         ]
 
@@ -32,6 +34,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id',
+            'user_ID',
+
             'name',
             'first_name',
             'last_name',
@@ -42,7 +46,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         ]
 
     def update(self, instance, validated_data):
-        read_only = ['id', 'mob_number', 'name', 'profile_img']
+        read_only = ['id','user_ID', 'mob_number', 'name', 'profile_img']
         image_add_db({'profile_img': instance.profile_img}, validated_data,instance=instance)
         # validated_data._mutable=True
         for i in read_only:

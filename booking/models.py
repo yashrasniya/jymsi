@@ -5,6 +5,7 @@ from django.db import models
 
 class Free_trial(models.Model):
     user = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
+    booking_ID = models.CharField(max_length=100,null=True)
     gym = models.ForeignKey('gym.Gym', on_delete=models.CASCADE)
     type = models.CharField(choices=(
         ('1', 'Morning'),
