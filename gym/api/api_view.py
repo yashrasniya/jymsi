@@ -47,7 +47,7 @@ class Gym_create(APIView):
                 if not Gym.objects.filter(gym_ID=f"ZYM{ID}"):
                     n=False
 
-            gym_obj = Gym.objects.create(user=request.user,gym_ID=ID)
+            gym_obj = Gym.objects.create(user=request.user,gym_ID=f"ZYM{ID}")
 
         gym_serializer.update(gym_serializer(), gym_obj, request.data)
 

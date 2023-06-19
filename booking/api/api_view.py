@@ -33,7 +33,7 @@ class Free_trial_view(APIView):
         if ser.is_valid():
             if Free_trial.objects.filter(gym=gym_obj[0], user=request.user):
                 return Response(error('you all ready claim the trial!'))
-            obj = ser.save(user=request.user,booking_ID=ID)
+            obj = ser.save(user=request.user,booking_ID=f"B{ID}")
             obj.token = random.randint(10000, 99999)
             obj.save()
             return Response({'data': ser.data, 'token': obj.token})
