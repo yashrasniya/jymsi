@@ -103,7 +103,7 @@ class register(APIView):
         ser_obj = UserRegisterSerializer(data=request.data)
         n=True
         while n:
-            ID = random.randint(10000, 99999)
+            ID = random.randint(100000, 999999)
             if not User.objects.filter(user_ID=ID):
                 n = False
         if ser_obj.is_valid():

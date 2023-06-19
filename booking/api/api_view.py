@@ -10,7 +10,7 @@ import random
 from gym.api.api_view import partner_check
 from accounts.models import User
 import datetime
-
+from tkinter import Tk
 
 class Free_trial_view(APIView):
     permission_classes = [IsAuthenticated]
@@ -27,7 +27,7 @@ class Free_trial_view(APIView):
         n = True
         while n:
             ID = random.randint(10000, 99999)
-            if not Free_trial.objects.filter(booking_ID=ID):
+            if not Free_trial.objects.filter(booking_ID=f"B{ID}"):
                 n = False
         ser = Free_trial_serializers(data=request.GET)
         if ser.is_valid():
