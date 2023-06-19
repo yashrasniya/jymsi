@@ -10,7 +10,7 @@ import random
 from gym.api.api_view import partner_check
 from accounts.models import User
 import datetime
-from tkinter import Tk
+
 
 class Free_trial_view(APIView):
     permission_classes = [IsAuthenticated]
