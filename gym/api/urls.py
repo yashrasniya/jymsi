@@ -6,7 +6,7 @@ from gym.api.api_view import (Gym_view, facilities_view,
 
 urlpatterns = [
     path('gym/', Gym_view.as_view()),
-    path('gym/<int:gym_id>/', Gym_view.as_view()),
+    path('gym/<str:gym_id>/', Gym_view.as_view()),
     path('gym/create/', Gym_create.as_view()),
     path('gym/my/', My_Gym.as_view()),
     path('facilities/', facilities_view.as_view()),
