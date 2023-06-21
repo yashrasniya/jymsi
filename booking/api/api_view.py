@@ -18,7 +18,7 @@ class Free_trial_view(APIView):
     def get(self, request):
         if not request.GET.get('gym', ''):
             return Response(error("gym id not found"))
-        gym_obj = Gym.objects.filter(id=request.GET.get('gym'))
+        gym_obj = Gym.objects.filter(gym_ID=request.GET.get('gym'))
         if not gym_obj:
             return Response(error("gym id not found"))
 

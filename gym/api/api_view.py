@@ -168,9 +168,9 @@ class Review_action(APIView):
     def post(self, request, action, gym_id, review_id=None):
         if not action in ['add', 'remove', 'edit']:
             return Response(error('action must be add or remove'))
-        if not Gym.objects.filter(id=gym_id):
+        if not Gym.objects.filter(gym_ID=gym_id):
             return Response(error("gym id not found! "))
-        gym_obj = Gym.objects.get(id=gym_id)
+        gym_obj = Gym.objects.get(gym_ID=gym_id)
         if action == 'add':
             ser = reviews_serializer(data=request.data)
             if ser.is_valid():
