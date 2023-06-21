@@ -58,9 +58,11 @@ class My_Gym(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        print("sdf")
         gym_obj, boll = partner_check(request)
         if boll: return gym_obj
-        return Response(my_gym(gym_obj).data)
+        print({'gym_created':True if gym_obj else False,'gym':my_gym(gym_obj).data})
+        return Response({'gym_created':True if gym_obj else False,'gym':my_gym(gym_obj).data})
 
 
 class Gym_Image_add(APIView):
