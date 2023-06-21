@@ -208,7 +208,7 @@ class timing_view(APIView):
         if boll: return gym_obj
         if request.data.get('gym_holiday', ''):
             gym_obj.gym_holiday = request.data.get('gym_holiday', '')
-        gym_obj.save()
+            gym_obj.save()
         if not action in ['add', 'remove', 'edit']:
             return Response(error('action must be add ,edit or remove'))
 

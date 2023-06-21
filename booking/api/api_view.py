@@ -21,9 +21,7 @@ class Free_trial_view(APIView):
         gym_obj = Gym.objects.filter(id=request.GET.get('gym'))
         if not gym_obj:
             return Response(error("gym id not found"))
-        # data = {'gym': gym_id,}
-        # data.update(request.GET)
-        # print(data)
+
         n = True
         while n:
             ID = random.randint(10000, 99999)
@@ -73,3 +71,12 @@ class all_booking(APIView):
         if boll: return gym_obj
         return Response(Free_trial_serializers(
             Free_trial.objects.filter(gym=gym_obj, valid=True), many=True).data)
+
+class all_booking_user(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response(Free_trial_serializers(
+            Free_trial.objects.filter(user=request.user, valid=True), many=True).data)
+
+
