@@ -6,7 +6,7 @@ from gym.api.api_view import (Gym_view, facilities_view,
 
 urlpatterns = [
     path('gym/', Gym_view.as_view()),
-    path('gym/<str:gym_id>/', Gym_view.as_view()),
+
     path('gym/create/', Gym_create.as_view()),
     path('gym/my/', My_Gym.as_view()),
     path('facilities/', facilities_view.as_view()),
@@ -23,4 +23,4 @@ urlpatterns = [
     path('gym/deals/<str:action>/<int:deals_id>/', Deals_action.as_view()),
     path('gym/personal_number/', personal_number.as_view()),
 
-]
+]+[path('gym/<str:gym_id>/', Gym_view.as_view())]

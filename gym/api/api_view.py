@@ -16,7 +16,7 @@ def partner_check(request):
     if Gym.objects.filter(user=request.user):
         return Gym.objects.filter(user=request.user)[0], False
     else:
-        return Response(error('you are not created a gym profile plz make it first')), True
+        return Response(error('you are not created a gym profile plz make it first',gym_created=False)), True
 
 
 class Gym_view(APIView):
