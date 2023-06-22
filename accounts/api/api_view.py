@@ -137,3 +137,14 @@ class UserProfile(APIView):
 
     def get(self, request):
         return Response(UserSerializer(request.user).data)
+
+import requests
+import json
+class ip_filder(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self,request):
+        ip = request.META.get('REMOTE_ADDR')
+        api_token='77b66c4ac065410b867b76dae744859a'
+        req=requests.get(url=f'https://api.ipgeolocation.io/ipgeo?apiKey={api_token}&ip={ip}')
+        return Response(req.json())
