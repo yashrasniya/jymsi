@@ -140,11 +140,20 @@ class UserProfile(APIView):
 
 import requests
 import json
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    print(x_forwarded_for)
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    print(ip)
+    return ip
 class ip_filder(APIView):
     permission_classes = [AllowAny]
 
     def get(self,request):
-        ip = request.META.get('REMOTE_ADDR')
+        ip = get_client_ip(request)
         api_token='77b66c4ac065410b867b76dae744859a'
         req=requests.get(url=f'https://api.ipgeolocation.io/ipgeo?apiKey={api_token}&ip={ip}')
-        return Response(req.json())
+        return Response({'sdf':req.json()})
