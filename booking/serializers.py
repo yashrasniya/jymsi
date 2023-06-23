@@ -24,11 +24,9 @@ class Free_trial_serializers(serializers.ModelSerializer):
     def get_gym(self,obj):
         return obj.gym.gym_ID
 
-    # def __init__(self,instance=None, data=empty, **kwargs):
-    #     super().__init__(instance=instance, data=data, **kwargs)
-    #     print(data)
 
-class my_gym(Free_trial_serializers):
+
+class Free_trial_serializers_user(Free_trial_serializers):
     def __init__(self,instance=None, data=empty, **kwargs):
         super(my_gym, self).__init__(instance=instance, data=data, **kwargs)
         self.Meta.fields.append('token')

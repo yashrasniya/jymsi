@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from gym.models import Gym
 from accounts.api.api_view import error
-from ..serializers import Free_trial_serializers
+from ..serializers import Free_trial_serializers,Free_trial_serializers_user
 from ..models import Free_trial
 from gym.serializers import gym_serializer
 import random
@@ -78,7 +78,7 @@ class all_booking_user(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return Response(Free_trial_serializers(
+        return Response(Free_trial_serializers_user(
             Free_trial.objects.filter(user=request.user, valid=True), many=True).data)
 
 
