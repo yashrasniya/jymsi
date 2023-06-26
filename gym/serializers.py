@@ -82,6 +82,7 @@ class timing_serializer(serializers.ModelSerializer):
 
 class reviews_serializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
+    permission =serializers.SerializerMethodField()
 
     class Meta:
         model = Reviews
@@ -91,10 +92,16 @@ class reviews_serializer(serializers.ModelSerializer):
             'user',
             'dateTime',
             'rating',
+            'permission',
         ]
 
     def get_user(self, obj):
         return User_public_serializer(obj.user).data
+    def get_permission(self,obj):
+        print(self.context.get('user',''))
+        if self.context.get('user',''):
+            return True if obj.user==self.context.get('user') else False
+        return False
 
 
 class Image_serializer(serializers.ModelSerializer):
@@ -112,7 +119,7 @@ class Image_serializer(serializers.ModelSerializer):
 class gym_serializer(serializers.ModelSerializer):
     gym_facilities = facilities_serializer(many=True)
     gym_trainer = trainer_serializer(many=True)
-    gym_reviews = reviews_serializer(many=True)
+    gym_reviews = serializers.SerializerMethodField()
     gym_images = Image_serializer(many=True)
     gym_timing = timing_serializer(many=True)
     gym_deals = Deals_serializer(many=True)
@@ -191,7 +198,9 @@ class gym_serializer(serializers.ModelSerializer):
             if Free_trial.objects.filter(user=user,gym=obj,valid=True):
                 return True
         return False
-
+    def get_gym_reviews(self,obj):
+        print(self.context.get('user'))
+        return reviews_serializer(obj.gym_reviews,many=True,context=self.context).data
 
 class my_gym(gym_serializer):
     def __init__(self,instance=None, data=empty, **kwargs):
