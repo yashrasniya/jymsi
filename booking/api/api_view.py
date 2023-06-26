@@ -12,6 +12,7 @@ from accounts.models import User
 import datetime
 
 
+
 class Free_trial_view(APIView):
     permission_classes = [IsAuthenticated]
 

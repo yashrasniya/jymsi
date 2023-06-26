@@ -25,10 +25,11 @@ class Gym_view(APIView):
     def get(self, request, gym_id=None):
         if not gym_id:
 
-            ser = gym_serializer(Gym.objects.filter(visible=True), many=True)
+            ser = gym_serializer(Gym.objects.filter(visible=True), many=True,context={'user':request.user})
         else:
-            ser = gym_serializer(Gym.objects.filter(gym_ID=gym_id,visible=True), many=True)
+            ser = gym_serializer(Gym.objects.filter(gym_ID=gym_id,visible=True,context={'user':request.user}), many=True)
         return Response(ser.data)
+
 
 
 class Gym_create(APIView):
@@ -106,7 +107,7 @@ class facilities_view(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        return Response(facilities_serializer(Facilities.objects.all(), many=True).data)
+        return Response(facilities_serializer(Facilities.objects.all(), many=True,context={'user':request.user}).data)
 
 
 class facilities_action(APIView):
@@ -182,7 +183,7 @@ class Review_action(APIView):
             else:
                 return Response(error("error", error=ser.errors))
         elif action == 'remove':
-            review_obj = Reviews.objects.filter(id=review_id)
+            review_obj = Reviews.objects.filter(id=review_id,user=request.user)
             if review_obj:
                 review_obj[0].delete()
                 return Response(gym_serializer(gym_obj).data)

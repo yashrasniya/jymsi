@@ -3,17 +3,40 @@ from gym.models import Gym, Facilities, Trainer, Reviews, Image, Timing, Deals
 from rest_framework.fields import empty
 from accounts.serializers import User_public_serializer, User
 from jymsi_backend.utilitys import image_add_db
+from booking.models import Free_trial
+from django.contrib.auth.models import AnonymousUser
 
+
+def partner_check(request):
+    if not request.user.is_partner:
+        return
+    if Gym.objects.filter(user=request.user):
+        return Gym.objects.filter(user=request.user)[0], False
+    else:
+        return
 
 class facilities_serializer(serializers.ModelSerializer):
+    added=serializers.SerializerMethodField()
     class Meta:
         model = Facilities
         fields = [
             'id',
             'Facilities_name',
             'icon',
+            'added',
         ]
-
+    def get_added(self,obj):
+        if self.context.get('user','') and not type(self.context.get('user')) == AnonymousUser:
+            user=self.context.get('user')
+            print(user)
+            if not user.is_partner:
+                return False
+            if Gym.objects.filter(user=user):
+                return True if obj in  Gym.objects.get(user=user).gym_facilities.all() else False
+            else:
+                return False
+        else:
+            return False
 
 class Deals_serializer(serializers.ModelSerializer):
     class Meta:
@@ -96,6 +119,7 @@ class gym_serializer(serializers.ModelSerializer):
     review_count = serializers.SerializerMethodField()
     price = serializers.SerializerMethodField()
     gym_rating = serializers.SerializerMethodField()
+    booked = serializers.SerializerMethodField()
 
     class Meta:
         model = Gym
@@ -119,6 +143,7 @@ class gym_serializer(serializers.ModelSerializer):
             'gym_timing',
             'gym_holiday',
             'gym_deals',
+            'booked',
         ]
 
     def update(self, instance, validated_data):
@@ -160,6 +185,13 @@ class gym_serializer(serializers.ModelSerializer):
         if obj.gym_reviews.all():
             return round/len(obj.gym_reviews.all())
         return 0
+    def get_booked(self,obj):
+        if self.context.get('user','') and not type(self.context.get('user')) == AnonymousUser:
+            user=self.context.get('user')
+            if Free_trial.objects.filter(user=user,gym=obj,valid=True):
+                return True
+        return False
+
 
 class my_gym(gym_serializer):
     def __init__(self,instance=None, data=empty, **kwargs):
