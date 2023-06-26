@@ -27,7 +27,7 @@ class Gym_view(APIView):
 
             ser = gym_serializer(Gym.objects.filter(visible=True), many=True,context={'user':request.user})
         else:
-            ser = gym_serializer(Gym.objects.filter(gym_ID=gym_id,visible=True,context={'user':request.user}), many=True)
+            ser = gym_serializer(Gym.objects.filter(gym_ID=gym_id,visible=True), many=True,context={'user':request.user})
         return Response(ser.data)
 
 
