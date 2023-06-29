@@ -98,7 +98,6 @@ class reviews_serializer(serializers.ModelSerializer):
     def get_user(self, obj):
         return User_public_serializer(obj.user).data
     def get_permission(self,obj):
-        print(self.context.get('user',''))
         if self.context.get('user',''):
             return True if obj.user==self.context.get('user') else False
         return False
@@ -199,7 +198,6 @@ class gym_serializer(serializers.ModelSerializer):
                 return True
         return False
     def get_gym_reviews(self,obj):
-        print(self.context.get('user'))
         return reviews_serializer(obj.gym_reviews,many=True,context=self.context).data
 
 class my_gym(gym_serializer):

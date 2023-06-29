@@ -178,7 +178,7 @@ class Review_action(APIView):
                 obj = ser.save(user=request.user)
 
                 gym_obj.gym_reviews.add(obj)
-                return Response(gym_serializer(gym_obj).data)
+                return Response(gym_serializer(gym_obj,context={'user':request.user}).data,)
 
             else:
                 return Response(error("error", error=ser.errors))
@@ -195,7 +195,7 @@ class Review_action(APIView):
                 ser = reviews_serializer(review_obj[0], data=request.data)
                 if ser.is_valid():
                     ser.save(user=request.user)
-                    return Response(gym_serializer(gym_obj).data)
+                    return Response(gym_serializer(gym_obj,context={'user':request.user}).data)
 
                 else:
                     return Response(error("error", error=ser.errors))
