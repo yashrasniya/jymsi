@@ -10,6 +10,7 @@ import random
 from gym.api.api_view import partner_check
 from accounts.models import User
 import datetime
+from django.shortcuts import redirect
 
 
 
@@ -65,6 +66,32 @@ class Token_varify(APIView):
         else:
             return Response(error('you are too late!'))
 
+class Free_trial_action(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request,action,trail_id):
+        if not action in ['cancel', 'edit']:
+            return Response(error('action must be cancel or edit'))
+        obj=Free_trial.objects.filter(booking_ID=trail_id)
+        if not obj:
+            return Response(error('trail id not found'))
+        if not obj[0].valid:
+            return Response(error('trail id is verified so You can not cancel it!'))
+        if request.user!=obj[0].user:
+            return Response(error('trail id is not related to you!'))
+        if action=='cancel':
+            obj[0].delete()
+        if action=='edit':
+            if request.GET.get('gym',''):
+                return Response(error('you can not add gym id only booking id! '))
+            ser_obj=Free_trial_serializers(obj[0],data=request.GET)
+            if not ser_obj.is_valid():
+                return Response(error('', error=ser_obj.errors))
+            obj=ser_obj.save()
+
+        return all_booking_user().get(request)
+
+
 
 class all_booking(APIView):
     permission_classes = [IsAuthenticated]
@@ -73,13 +100,12 @@ class all_booking(APIView):
         gym_obj, boll = partner_check(request)
         if boll: return gym_obj
         return Response(Free_trial_serializers(
-            Free_trial.objects.filter(gym=gym_obj, valid=True), many=True).data)
+            Free_trial.objects.filter(gym=gym_obj), many=True,context={'user':request.user}).data)
 
 class all_booking_user(APIView):
     permission_classes = [IsAuthenticated]
-
     def get(self, request):
         return Response(Free_trial_serializers_user(
-            Free_trial.objects.filter(user=request.user, valid=True), many=True).data)
+            Free_trial.objects.filter(user=request.user), many=True,context={'user':request.user}).data)
 
 

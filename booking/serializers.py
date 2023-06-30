@@ -4,10 +4,12 @@ from .models import Free_trial
 from gym.models import Gym
 from rest_framework.fields import empty
 from gym.serializers import gym_serializer
+import datetime
 
 class Free_trial_serializers(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     gym=serializers.SerializerMethodField()
+    verified=serializers.SerializerMethodField()
     class Meta:
         model = Free_trial
         fields = [
@@ -17,6 +19,7 @@ class Free_trial_serializers(serializers.ModelSerializer):
             'gym',
             'type',
             'date',
+            'verified',
 
         ]
 
@@ -24,6 +27,14 @@ class Free_trial_serializers(serializers.ModelSerializer):
         return User_public_serializer(obj.user).data
     def get_gym(self,obj):
         return obj.gym.gym_ID
+    def get_verified(self,obj):
+        is_valid = obj.date - datetime.date.today()
+        print(is_valid.days, obj.date, datetime.date.today())
+        if not obj.valid:
+            return True
+        if is_valid.days >= 0:
+            return False
+        return 'Expired'
 
 
 
