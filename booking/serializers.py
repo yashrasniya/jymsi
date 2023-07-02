@@ -20,6 +20,7 @@ class Free_trial_serializers(serializers.ModelSerializer):
             'type',
             'date',
             'verified',
+            'cancel',
 
         ]
 
