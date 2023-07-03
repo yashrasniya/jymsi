@@ -81,6 +81,7 @@ class Free_trial_action(APIView):
             return Response(error('trail id is not related to you!'))
         if action=='cancel':
             obj[0].cancel=True
+            obj[0].save()
         if action=='edit':
             if request.GET.get('gym',''):
                 return Response(error('you can not add gym id only booking id! '))
