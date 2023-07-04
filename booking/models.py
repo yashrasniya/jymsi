@@ -12,6 +12,7 @@ class Free_trial(models.Model):
         ('2', 'Evening'),
     ), max_length=40)
     date = models.DateField()
+    book_datetime = models.DateTimeField(auto_now=True)
     token = models.CharField(max_length=30, null=True)
     valid=models.BooleanField(default=True)
     cancel=models.BooleanField(default=False)

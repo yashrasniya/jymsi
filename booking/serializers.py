@@ -21,6 +21,7 @@ class Free_trial_serializers(serializers.ModelSerializer):
             'date',
             'verified',
             'cancel',
+            'book_datetime',
 
         ]
 
