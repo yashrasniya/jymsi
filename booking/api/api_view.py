@@ -32,7 +32,7 @@ class Free_trial_view(APIView):
         ser = Free_trial_serializers(data=request.GET)
         gym_ID=Gym.objects.filter(gym_ID=request.GET['gym'])[0]
         if ser.is_valid():
-            if Free_trial.objects.filter(gym=gym_obj[0], user=request.user):
+            if Free_trial.objects.filter(gym=gym_obj[0], user=request.user,cancel=False):
                 return Response(error('you all ready claim the trial!'))
             obj = ser.save(user=request.user, booking_ID=f"B{ID}",gym=gym_ID)
             obj.token = random.randint(1000, 9999)
@@ -52,7 +52,7 @@ class Token_varify(APIView):
         user_obj = User.objects.filter(id=user_id)
         if not user_obj:
             return Response(error('user id not found'))
-        trial_obj = Free_trial.objects.filter(token=token, user=user_obj[0], valid=True)
+        trial_obj = Free_trial.objects.filter(token=token, user=user_obj[0], valid=True,cancel=False)
         if not trial_obj:
             return Response(error("code not found in this user"))
         is_valid = trial_obj[0].date - datetime.date.today()

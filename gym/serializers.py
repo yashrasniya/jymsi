@@ -116,7 +116,7 @@ class Image_serializer(serializers.ModelSerializer):
 
 
 class gym_serializer(serializers.ModelSerializer):
-    gym_facilities = facilities_serializer(many=True)
+    gym_facilities = serializers.SerializerMethodField()
     gym_trainer = trainer_serializer(many=True)
     gym_reviews = serializers.SerializerMethodField()
     gym_images = Image_serializer(many=True)
@@ -160,7 +160,8 @@ class gym_serializer(serializers.ModelSerializer):
             if validated_data.get(i, ''):
                 data[i] = validated_data.get(i)
         super().update(instance, data)
-
+    def get_gym_facilities(self,obj):
+        return facilities_serializer(obj.gym_facilities,many=True,context=self.context).data
     def get_review_count(self, obj):
         return len(obj.gym_reviews.all())
 
@@ -194,7 +195,7 @@ class gym_serializer(serializers.ModelSerializer):
     def get_booked(self,obj):
         if self.context.get('user','') and not type(self.context.get('user')) == AnonymousUser:
             user=self.context.get('user')
-            if Free_trial.objects.filter(user=user,gym=obj,valid=True):
+            if Free_trial.objects.filter(user=user,gym=obj,valid=True,cancel=False):
                 return True
         return False
     def get_gym_reviews(self,obj):
