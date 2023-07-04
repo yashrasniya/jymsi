@@ -196,6 +196,8 @@ class gym_serializer(serializers.ModelSerializer):
         if self.context.get('user','') and not type(self.context.get('user')) == AnonymousUser:
             user=self.context.get('user')
             if Free_trial.objects.filter(user=user,gym=obj,valid=True,cancel=False):
+                if Free_trial.objects.filter(user=user,gym=obj,valid=False,cancel=False):
+                    return 'Verified'
                 return True
         return False
     def get_gym_reviews(self,obj):
