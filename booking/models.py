@@ -16,3 +16,8 @@ class Free_trial(models.Model):
     token = models.CharField(max_length=30, null=True)
     valid=models.BooleanField(default=True)
     cancel=models.BooleanField(default=False)
+    def __str__(self):
+        return self.booking_ID
+    def date_time(self):
+        print(dir(self.type),self.type.title())
+        return str(self.date)+" "+str(self.type)

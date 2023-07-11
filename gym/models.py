@@ -25,7 +25,8 @@ class Gym(models.Model):
     gym_holiday = models.CharField(max_length=50)
     gym_deals = models.ManyToManyField('Deals')
     visible=models.BooleanField(default=False)
-
+    def __str__(self):
+        return str(self.gym_ID)
 
 
 class Facilities(models.Model):
@@ -38,6 +39,11 @@ class Trainer(models.Model):
     trainer_image = models.ImageField(upload_to='Trainer/image')
     trainer_description = models.TextField(max_length=600)
 
+    def gym_id(self):
+        gym_obj=Gym.objects.filter(gym_trainer=self)
+        if gym_obj:
+            return str(gym_obj[0].gym_ID)
+        return '---------'
 
 class Reviews(models.Model):
     reviews_text = models.TextField(max_length=1000)
@@ -55,7 +61,11 @@ class Reviews(models.Model):
 
     # def dateTime(self):
     #     return self.dateTime
-
+    def gym_id(self):
+        gym_obj=Gym.objects.filter(gym_reviews=self)
+        if gym_obj:
+            return str(gym_obj[0].gym_ID)
+        return '---------'
 
 class Timing(models.Model):
     type = models.CharField(choices=(
@@ -64,14 +74,27 @@ class Timing(models.Model):
     ), max_length=40)
     opening = models.TimeField(blank=True)
     closing = models.TimeField(blank=True)
-
+    def gym_id(self):
+        gym_obj=Gym.objects.filter(gym_timing=self)
+        if gym_obj:
+            return str(gym_obj[0].gym_ID)
+        return '---------'
 
 class Deals(models.Model):
     months = models.CharField(max_length=200)
     price = models.CharField(max_length=200)
     discounted_price = models.CharField(max_length=200)
     discount = models.CharField(max_length=200)
-
+    def gym_id(self):
+        gym_obj=Gym.objects.filter(gym_deals=self)
+        if gym_obj:
+            return str(gym_obj[0].gym_ID)
+        return '---------'
 
 class Image(models.Model):
     image = models.ImageField(upload_to='gym_images')
+    def gym_id(self):
+        gym_obj=Gym.objects.filter(gym_images=self)
+        if gym_obj:
+            return str(gym_obj[0].gym_ID)
+        return '---------'
