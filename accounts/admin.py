@@ -21,6 +21,7 @@ class User_admin(UserAdmin):
         ),
         # (("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
+
     add_fieldsets = (
         (
             None,
@@ -31,6 +32,7 @@ class User_admin(UserAdmin):
         ),
     )
     list_display = ("mob_number", "name","is_active", "is_partner")
+    search_fields=('mob_number','user_ID', "first_name", "last_name", "email")
     ordering = ("mob_number",)
 
 admin.site.register(User, User_admin)

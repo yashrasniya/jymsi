@@ -16,8 +16,13 @@ class Reviews_admin(admin.TabularInline):
 
 @admin.register(Gym)
 class gym(admin.ModelAdmin):
+    list_display=('gym_ID','user','gym_name','gym_city')
+
     inlines = [Trainer_admin,Facilities_admin,Reviews_admin]
-    list_display = ('gym_ID','user','gym_name','visible','gym_city')
+    search_fields = ('gym_ID','gym_name',
+                    'gym_city','gym_address','gym_state',
+                    'gym_city','gym_PinCode','gym_mobile_number',
+                    'gym_landLine_number','gym_description')
 
 
 @admin.register(Facilities)
