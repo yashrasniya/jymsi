@@ -32,7 +32,8 @@ class Gym(models.Model):
 class Facilities(models.Model):
     Facilities_name = models.CharField(max_length=50)
     icon = models.FileField(upload_to='facilities/icon', blank=False)
-
+    def __str__(self):
+        return self.Facilities_name
 
 class Trainer(models.Model):
     trainer_name = models.CharField(max_length=60)
@@ -44,6 +45,8 @@ class Trainer(models.Model):
         if gym_obj:
             return str(gym_obj[0].gym_ID)
         return '---------'
+    def __str__(self):
+        return self.trainer_name
 
 class Reviews(models.Model):
     reviews_text = models.TextField(max_length=1000)
