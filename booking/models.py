@@ -21,3 +21,5 @@ class Free_trial(models.Model):
     def date_time(self):
         print(dir(self.type),self.type.title())
         return str(self.date)+" "+str(self.type)
+
+# class Subsection(models.Model):
