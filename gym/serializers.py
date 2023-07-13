@@ -62,11 +62,14 @@ class trainer_serializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         image_add_db({'trainer_image': instance.trainer_image}, validated_data)
-        data = {'trainer_name': '', 'trainer_description': ''}
+        data = {'trainer_name': None, 'trainer_description': ''}
+        do=False
         for i in data:
-            if validated_data.get(i):
+            if validated_data.get(i,''):
+                do=True
                 data[i] = validated_data.get(i)
-        super(trainer_serializer, self).update(instance, data)
+        if do:
+            super(trainer_serializer, self).update(instance, data)
 
 
 class timing_serializer(serializers.ModelSerializer):
