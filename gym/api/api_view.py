@@ -277,9 +277,11 @@ class personal_number(APIView):
     def post(self, request):
         gym_obj, boll = partner_check(request)
         if boll: return gym_obj
-        if not (request.data.get('gym_mobile_number', '') and request.data.get('gym_landLine_number', '')):
+        if not (request.data.get('gym_mobile_number', '') or request.data.get('gym_landLine_number', '')):
             return Response(error('gym_mobile_number or  gym_landLine_number is missing '))
-        gym_obj.gym_mobile_number = request.data.get('gym_mobile_number', '')
-        gym_obj.gym_landLine_number = request.data.get('gym_landLine_number', '')
+        if request.data.get('gym_mobile_number', ''):
+            gym_obj.gym_mobile_number = request.data.get('gym_mobile_number', '')
+        if request.data.get('gym_landLine_number', ''):
+            gym_obj.gym_landLine_number = request.data.get('gym_landLine_number', '')
         gym_obj.save()
         return Response(gym_serializer(gym_obj).data)
