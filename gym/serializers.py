@@ -208,3 +208,4 @@ class my_gym(gym_serializer):
         super(my_gym, self).__init__(instance=instance, data=data, **kwargs)
         self.Meta.fields.append('gym_mobile_number')
         self.Meta.fields.append('gym_landLine_number')
+        self.Meta.fields.append('visible')
