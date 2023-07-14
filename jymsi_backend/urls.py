@@ -24,6 +24,8 @@ urlpatterns = [
     path('api/v1/', include('accounts.api.urls')),
     path('api/v1/', include('gym.api.urls')),
     path('api/v1/', include('booking.api.urls')),
+    path('api/v1/', include('booking.api.urls')),
+    path('api/v1/', include('about_zymsi.urls')),
     path('api-auth/', include('rest_framework.urls')),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
