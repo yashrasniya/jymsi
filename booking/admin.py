@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Free_trial
+from .models import Free_trial,Subsection,Subsection_buy
 import datetime
 from django.utils.html import format_html
 # Register your models here.
@@ -30,4 +30,23 @@ class Free_trial_admin(admin.ModelAdmin):
             url=f"/admin/gym/gym/{obj.gym.pk}/change/"
             mob_number=user.gym_ID
         return format_html('<a href="{}">{}</a>', url, mob_number)
-        
+
+@admin.register(Subsection)
+class Subsection_admin(admin.ModelAdmin):
+    list_display = ('month','gap','platform_fees')
+
+
+@admin.register(Subsection_buy)
+class Subsection_admin(admin.ModelAdmin):
+    list_display = ('booking_ID','gym_ID','user',"book_datetime")
+
+
+    def gym_ID(self,obj):
+        user=obj.gym
+        url=''
+        mob_number=''
+        if user:
+            print(dir(obj.user),'sdf')
+            url=f"/admin/gym/gym/{obj.gym.pk}/change/"
+            mob_number=user.gym_ID
+        return format_html('<a href="{}">{}</a>', url, mob_number)

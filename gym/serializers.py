@@ -3,10 +3,29 @@ from gym.models import Gym, Facilities, Trainer, Reviews, Image, Timing, Deals
 from rest_framework.fields import empty
 from accounts.serializers import User_public_serializer, User
 from jymsi_backend.utilitys import image_add_db
-from booking.models import Free_trial
+from booking.models import Free_trial,Subsection
 from django.contrib.auth.models import AnonymousUser
 
 
+class Subsection_Serializers(serializers.ModelSerializer):
+    amount=serializers.SerializerMethodField()
+    class Meta:
+        model=Subsection
+        fields=[
+            'month',
+            'gap',
+            'amount'
+            'for_short_time'
+        ]
+    def get_amount(self,obj):
+        try:
+            if self.context.get('gym'):
+                return str((int(self.context.get('gym').base_amount) * (int(obj.platform_fees)/100)) +int(self.context.get('gym').base_amount))
+
+            return 'gym is not given in Subsection_Serializers in backend'
+        except ValueError as e:
+            print(e)
+        return 'value in str'
 def partner_check(request):
     if not request.user.is_partner:
         return
@@ -126,6 +145,7 @@ class gym_serializer(serializers.ModelSerializer):
     price = serializers.SerializerMethodField()
     gym_rating = serializers.SerializerMethodField()
     booked = serializers.SerializerMethodField()
+    subsection = serializers.SerializerMethodField()
 
     class Meta:
         model = Gym
@@ -150,6 +170,8 @@ class gym_serializer(serializers.ModelSerializer):
             'gym_holiday',
             'gym_deals',
             'booked',
+            'subsection',
+
         ]
 
     def update(self, instance, validated_data):
@@ -202,9 +224,12 @@ class gym_serializer(serializers.ModelSerializer):
         return False
     def get_gym_reviews(self,obj):
         return reviews_serializer(obj.gym_reviews,many=True,context=self.context).data
+    def get_subsection(self,obj):
+        return Subsection_Serializers(Subsection.objects.filter(visible=True),many=True,context={'gym':obj}).data
 
 class my_gym(gym_serializer):
     def __init__(self,instance=None, data=empty, **kwargs):
         super(my_gym, self).__init__(instance=instance, data=data, **kwargs)
         self.Meta.fields.append('gym_mobile_number')
         self.Meta.fields.append('gym_landLine_number')
+

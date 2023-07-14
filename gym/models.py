@@ -25,6 +25,7 @@ class Gym(models.Model):
     gym_holiday = models.CharField(max_length=50)
     gym_deals = models.ManyToManyField('Deals')
     visible=models.BooleanField(default=False)
+    base_amount=models.CharField(max_length=100,default='0')
     def __str__(self):
         return str(self.gym_ID)
 

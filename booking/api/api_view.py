@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from gym.models import Gym
 from accounts.api.api_view import error
 from ..serializers import Free_trial_serializers,Free_trial_serializers_user
-from ..models import Free_trial
-from gym.serializers import gym_serializer
+from ..models import Free_trial,Subsection_buy,Subsection
+from gym.serializers import gym_serializer,Subsection_Serializers
 import random
 from gym.api.api_view import partner_check
 from accounts.models import User
@@ -110,3 +110,8 @@ class all_booking_user(APIView):
             Free_trial.objects.filter(user=request.user), many=True,context={'user':request.user}).data)
 
 
+class All_Subsection(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self,request):
+        return Subsection_Serializers(Subsection.objects.filter(),many=True)

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from accounts.serializers import User_public_serializer
-from .models import Free_trial
+from .models import Free_trial,Subsection,Subsection_buy
 from gym.models import Gym
 from rest_framework.fields import empty
 from gym.serializers import gym_serializer
@@ -46,3 +46,5 @@ class Free_trial_serializers_user(Free_trial_serializers):
         self.Meta.fields.append('token')
     def get_gym(self,obj):
         return gym_serializer(obj.gym).data
+
+
