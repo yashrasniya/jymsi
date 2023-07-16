@@ -35,6 +35,7 @@ STATIC_ROOT='static'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Application definition
+TIME_ZONE =  'Asia/Kolkata'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
