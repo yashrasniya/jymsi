@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div>
+      <style>
+        .not-found {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          z-index: 999;
+          font-family: 'Poppins', sans-serif;
+        }
+        .error-logo {
+          font-size: 130px;
+          font-weight: 800;
+          color: #28282b;
+          font-family: var(--main-font);
+          letter-spacing: 2px;
+        }
+        .not-found-text {
+          margin-top: -10px;
+          font-weight: 600;
+          font-size: 28px;
+        }
+        .not-found-button {
+          width: 150px;
+          height: 30px;
+          background-color: #1ab65c;
+          color: #fff;
+          margin-top: 20px;
+          font-size: 14px;
+          border: none;
+          border-radius: 5px;
+          font-family: "Poppins", sans-serif;
+        }
+      </style>
+      <div class="not-found">
+        <div class="error-logo">404!</div>
+        <h1 class="not-found-text">Not Found</h1>
+        <p>Something went wrong</p>
+<a href='http://zymsi.com'>
+        <button class="not-found-button" >Back to Homepage</button></a>
+      </div>
+    </div>
+  </body>
+</html>
