@@ -6,7 +6,7 @@ from .models import User,Superuser,Partner,All_User
 class User_admin(UserAdmin):
     fieldsets = (
         (None, {"fields": ("mob_number", "password")}),
-        (("Personal info"), {"fields": ("first_name", "last_name", "email")}),
+        (("Personal info"), {"fields": ("first_name", "last_name", "email",'user_ID')}),
         (
             ("Permissions"),
             {

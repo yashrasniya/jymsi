@@ -44,7 +44,7 @@ class Gym_create(APIView):
         else:
             n=True
             while n:
-                ID=random.randint(100,999)
+                ID=random.randint(10000,99999)
                 if not Gym.objects.filter(gym_ID=f"ZYM{ID}"):
                     n=False
 
