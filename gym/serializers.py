@@ -5,6 +5,7 @@ from accounts.serializers import User_public_serializer, User
 from jymsi_backend.utilitys import image_add_db
 from booking.models import Free_trial
 from django.contrib.auth.models import AnonymousUser
+import datetime
 
 
 def partner_check(request):
@@ -198,8 +199,13 @@ class gym_serializer(serializers.ModelSerializer):
     def get_booked(self,obj):
         if self.context.get('user','') and not type(self.context.get('user')) == AnonymousUser:
             user=self.context.get('user')
-            if Free_trial.objects.filter(user=user,gym=obj,valid=True,cancel=False):
-                return True
+            Free_trial_obj=Free_trial.objects.filter(user=user,gym=obj,valid=True,cancel=False)
+            if Free_trial_obj:
+                is_valid = Free_trial_obj[0].date - datetime.date.today()
+                if is_valid.days >= 0:
+                    return True
+                else:
+                    return False
             if Free_trial.objects.filter(user=user, gym=obj, valid=False, cancel=False):
                 return 'Verified'
         return False
