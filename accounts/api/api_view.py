@@ -35,7 +35,7 @@ class login(APIView):
         # generate OTP
         time_otp = pyotp.TOTP(user_obj[0].key)
         time_otp = time_otp.now()
-        # send_sms(mob_number, time_otp)
+        send_sms(mob_number, time_otp)
 
         # if email != "1988888888":
         #     self.EmailSending(email,time_otp)
@@ -86,6 +86,7 @@ class Otp_varify(APIView):
             data = serializer.data
             token = get_token(user)
 
+
             return Response({"user": data, "token": token},
                             status=status.HTTP_200_OK)
         return Response({'message': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
@@ -114,7 +115,7 @@ class register(APIView):
             user_obj.save()
             time_otp = pyotp.TOTP(user_obj.key)
             time_otp = time_otp.now()
-            # send_sms(request.data.get('mob_number'), time_otp)
+            send_sms(request.data.get('mob_number'), time_otp)
             return Response(
                 {'status': '200', 'message': 'Please verify your mobile to complete signup.', 'otp': time_otp},
                 status.HTTP_200_OK)

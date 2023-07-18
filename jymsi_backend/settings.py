@@ -35,7 +35,6 @@ STATIC_ROOT='static'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Application definition
-TIME_ZONE =  'Asia/Kolkata'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -138,6 +137,9 @@ REST_FRAMEWORK = {
 LANGUAGE_CODE = 'en-us'
 
 # TIME_ZONE = 'UTC'
+TIME_ZONE =  'Asia/Kolkata'
+
+
 
 USE_I18N = True
 
