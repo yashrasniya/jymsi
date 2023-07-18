@@ -17,7 +17,7 @@ class Gym(models.Model):
     gym_landLine_number=models.CharField(max_length=15)
     gym_description = models.TextField(max_length=1000)
     gym_images = models.ManyToManyField('Image',blank=True)
-    gym_link = models.URLField()
+    gym_link = models.URLField(max_length=30000)
     gym_facilities = models.ManyToManyField('Facilities',blank=True)
     gym_trainer = models.ManyToManyField('Trainer',blank=True)
     gym_reviews = models.ManyToManyField('Reviews',blank=True)
