@@ -27,7 +27,7 @@ class login(APIView):
 
     def get(self, request):
         mob_number = request.GET.get('mob_number', None)
-        partner = request.GET.get('partner', None)
+        partner = request.GET.get('is_partner', None)
         if not mob_number:
             return Response(error('mobile not found', hi='hi'))
         user_obj = User.objects.filter(mob_number=mob_number)
