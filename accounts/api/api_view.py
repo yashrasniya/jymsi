@@ -27,15 +27,25 @@ class login(APIView):
 
     def get(self, request):
         mob_number = request.GET.get('mob_number', None)
+        partner = request.GET.get('partner', None)
         if not mob_number:
             return Response(error('mobile not found', hi='hi'))
         user_obj = User.objects.filter(mob_number=mob_number)
+        print(type(partner))
         if not user_obj:
             return Response(error('User not found'))
+        if partner:
+            user_obj=user_obj.filter(is_partner=True)
+            if not user_obj: return Response(error('User is not aloud  to login in partner side'))
+        else:
+            user_obj = user_obj.filter(is_partner=False)
+            if not user_obj: return Response(error('partner is not aloud  to login in User side'))
+
         # generate OTP
         time_otp = pyotp.TOTP(user_obj[0].key)
         time_otp = time_otp.now()
-        send_sms(mob_number, time_otp)
+        if not mob_number=='1988888888':
+            send_sms(mob_number, time_otp)
 
         # if email != "1988888888":
         #     self.EmailSending(email,time_otp)
