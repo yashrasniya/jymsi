@@ -32,7 +32,7 @@ class login(APIView):
             return Response(error('mobile not found', hi='hi'))
         if mob_number in ['1988888888' ,'9999999999']:
             return Response(
-                {'status': '200', 'message': 'Please verify your mobile to complete signup.', 'otp': time_otp},
+                {'status': '200', 'message': 'Please verify your mobile to complete signup.'},
                 status.HTTP_200_OK)
         user_obj = User.objects.filter(mob_number=mob_number)
         print(type(partner))
