@@ -209,7 +209,7 @@ class timing_view(APIView):
     def post(self, request, action, timing_id=None):
         gym_obj, boll = partner_check(request)
         if boll: return gym_obj
-        if request.data.get('gym_holiday', ''):
+        if request.data.get('gym_holiday', ):
             gym_obj.gym_holiday = request.data.get('gym_holiday', '')
             gym_obj.save()
         if not action in ['add', 'remove', 'edit']:
