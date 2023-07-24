@@ -35,7 +35,7 @@ class Free_trial_view(APIView):
             trail_obj=Free_trial.objects.filter(gym=gym_obj[0], user=request.user,cancel=False)
             if trail_obj:
                 for i in trail_obj:
-                    is_valid = i[0].date - datetime.date.today()
+                    is_valid = i.date - datetime.date.today()
                     if is_valid.days >= 0:
                         return Response(error('you all ready claim the trial!'))
             obj = ser.save(user=request.user, booking_ID=f"B{ID}",gym=gym_ID)
