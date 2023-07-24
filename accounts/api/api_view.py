@@ -44,7 +44,7 @@ class login(APIView):
         # generate OTP
         time_otp = pyotp.TOTP(user_obj[0].key)
         time_otp = time_otp.now()
-        if not mob_number=='1988888888':
+        if not mob_number=='1988888888' or mob_number=='9999999999':
             send_sms(mob_number, time_otp)
 
         # if email != "1988888888":
@@ -62,14 +62,14 @@ class Otp_varify(APIView):
 
         if otp.__len__() != 6:
             return Response({'message': 'Invalid OTP'}, status.HTTP_400_BAD_REQUEST)
-        if mobile == '1988888888' and otp == '123456':
-            if not User.objects.filter(mob_number='1988888888'):
+        if mobile in ['1988888888','9999999999'] and otp == '123456':
+            if not User.objects.filter(mob_number=mobile):
                 temp_email = "lytedfm8202ueeu9@lytevideo.com"
                 user = User(mob_number=mobile, email=temp_email, password="nc9ehr4cx3cxf3y4nc3rdbytryddt")
                 user.save()
 
             else:
-                user = User.objects.get(mob_number='1988888888')
+                user = User.objects.get(mob_number=mobile)
             serializer = UserSerializer(user, context={'request': request})
             data = serializer.data
             token = get_token(user)
