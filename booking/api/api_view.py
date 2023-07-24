@@ -33,6 +33,7 @@ class Free_trial_view(APIView):
         gym_ID=Gym.objects.filter(gym_ID=request.GET['gym'])[0]
         if ser.is_valid():
             trail_obj=Free_trial.objects.filter(gym=gym_obj[0], user=request.user,cancel=False)
+
             if trail_obj:
                 for i in trail_obj:
                     is_valid = i.date - datetime.date.today()
