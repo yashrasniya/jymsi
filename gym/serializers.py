@@ -203,10 +203,11 @@ class gym_serializer(serializers.ModelSerializer):
             if Free_trial_obj:
                 for i in Free_trial_obj:
                     is_valid = i.date - datetime.date.today()
+                    print(is_valid)
                     if is_valid.days >= 0:
                         return True
-                else:
-                    return False
+            else:
+                return False
             if Free_trial.objects.filter(user=user, gym=obj, valid=False, cancel=False):
                 return 'Verified'
         return False
