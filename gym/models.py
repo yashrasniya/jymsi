@@ -1,7 +1,7 @@
 from django.db import models
 from accounts.models import User
 import datetime
-
+from django.utils import timezone
 
 # Create your models here.
 
@@ -51,7 +51,7 @@ class Trainer(models.Model):
 class Reviews(models.Model):
     reviews_text = models.TextField(max_length=1000)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    dateTime = models.DateTimeField(default=datetime.datetime.today())
+    dateTime = models.DateTimeField(default=timezone.now())
     rating = (
         ('-----', '-----'),
         ('1', '1'),
