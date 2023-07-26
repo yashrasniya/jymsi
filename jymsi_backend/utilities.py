@@ -7,7 +7,7 @@ def get_empty_dict():
 
 
 def send_sms(number, otp):
-    url = "https://2factor.in/API/V1/b9214bc2-f013-11ed-addf-0200cd936042/SMS/+91" + number + "/" + otp + "/zymsi"
+    url = "https://2factor.in/API/V1/b9214bc2-f013-11ed-addf-0200cd936042/SMS/+91" + number + "/" + otp + "/"
     requests.get(url)
 
 
