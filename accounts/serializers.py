@@ -19,7 +19,12 @@ class UserSerializer(serializers.ModelSerializer):
             'is_partner',
         ]
     def get_profile_img(self,obj):
-        return str(obj.profile_img)
+        if obj.profile_img:
+            if 'https' in str(obj.profile_img.url):
+                return str(obj.profile_img)
+            else:
+                return str(obj.profile_img.url)
+
 
 class User_public_serializer(UserSerializer):
     class Meta:
