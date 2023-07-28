@@ -176,6 +176,7 @@ class ip_filder(APIView):
 import google_auth_oauthlib.flow
 from django.shortcuts import redirect
 redirect_uri="http://127.0.0.1:8000/api/v1/google_callback/"
+redirect_uri="https://api.zymsi.com/api/v1/google_callback/"
 def googel_login(request):
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
         'client_secret.json',
