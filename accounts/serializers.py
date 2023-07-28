@@ -4,6 +4,7 @@ from jymsi_backend.utilitys import image_add_db
 
 
 class UserSerializer(serializers.ModelSerializer):
+    profile_img=serializers.SerializerMethodField()
     class Meta:
         model = User
         fields = [
@@ -17,7 +18,8 @@ class UserSerializer(serializers.ModelSerializer):
             'profile_img',
             'is_partner',
         ]
-
+    def get_profile_img(self,obj):
+        return str(obj.profile_img)
 
 class User_public_serializer(UserSerializer):
     class Meta:

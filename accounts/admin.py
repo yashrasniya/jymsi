@@ -31,7 +31,7 @@ class User_admin(UserAdmin):
             },
         ),
     )
-    list_display = ("mob_number", "name","is_active")
+    list_display = ("mob_number", "name","is_active",'email')
     search_fields=('mob_number','user_ID', "first_name", "last_name", "email")
     ordering = ("mob_number",)
     def get_queryset(self, request):

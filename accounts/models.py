@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-
+import random
 
 # Create your models here.
 class UserManager(BaseUserManager):
@@ -26,7 +26,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    mob_number = models.CharField(max_length=150, unique=True)
+    mob_number = models.CharField(max_length=150, unique=True,default=str(random.random()))
     user_ID = models.CharField(max_length=100,null=True)
 
     key = models.CharField(max_length=64)
@@ -34,6 +34,7 @@ class User(AbstractUser):
     USERNAME_FIELD = 'mob_number'
     username = ''
     is_partner=models.BooleanField(default=False)
+    mobile_verify=models.BooleanField(default=False)
     objects = UserManager()
 
     def name(self):

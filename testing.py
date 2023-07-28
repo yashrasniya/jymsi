@@ -28,9 +28,9 @@ def send_sms_message(
 
 
 def main():
-    app_id = "9ab0345b140c4971aaf839c96a893ee0"
+    app_id = "21d91c63ceae4c2db5eacc6d491992c6"
     origination_number = "+918938095294"
-    destination_number = "+919058540453"
+    destination_number = "+918938095294"
     message = (
         "This is a sample message sent from Amazon Pinpoint by using the AWS SDK for "
         "Python (Boto 3).")
@@ -38,7 +38,7 @@ def main():
 
     print("Sending SMS message.")
     message_id = send_sms_message(
-        boto3.client('pinpoint',region_name='ap-south-1',aws_access_key_id='AKIAU6PMEMPLLLNMFPTV',
+        boto3.client('pinpoint',region_name='us-east-1',aws_access_key_id='AKIAU6PMEMPLLLNMFPTV',
                      aws_secret_access_key='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'), app_id, origination_number, destination_number,
         message, message_type)
     print(f"Message sent! Message ID: {message_id}.")

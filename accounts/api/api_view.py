@@ -172,3 +172,77 @@ class ip_filder(APIView):
         api_token='77b66c4ac065410b867b76dae744859a'
         req=requests.get(url=f'https://api.ipgeolocation.io/ipgeo?apiKey={api_token}&ip={ip}')
         return Response({'sdf':req.json()})
+
+import google_auth_oauthlib.flow
+from django.shortcuts import redirect
+redirect_uri="http://127.0.0.1:8000/api/v1/google_callback/"
+def googel_login(request):
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+        'client_secret.json',
+        scopes=['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email'], )
+
+    flow.redirect_uri = redirect_uri
+
+    authorization_url, state = flow.authorization_url(
+
+        access_type='online',
+
+    )
+    return redirect(authorization_url)
+
+client_id="549026914943-7v02pt7ng4kt8kiq1ecpsmolo1k1413b.apps.googleusercontent.com"
+client_secret="MTB2VGfXaqx0iHLPfrWqgc6E"
+
+from django.http.response import HttpResponse,JsonResponse
+def google_login_callback(request):
+    code=request.GET.get('code',False)
+    if not code:
+        return HttpResponse('code not found')
+    url = f"https://oauth2.googleapis.com/token?" \
+          f"code={code}" \
+          f"&client_id={client_id}" \
+          f"&client_secret={client_secret}" \
+          f"&redirect_uri={redirect_uri}" \
+          f"&grant_type=authorization_code"
+
+    payload = {}
+    headers = {
+        'content-type': 'application/x-www-form-urlencoded'
+    }
+    response = requests.request("POST", url, headers=headers, data=payload)
+    if response.status_code!=200:
+        return HttpResponse(f'some thing went wrong! {response.status_code}')
+    access_token=response.json()['access_token']
+
+    url = "https://www.googleapis.com/oauth2/v1/userinfo?alt=json"
+
+    payload = {}
+    headers = {
+        'Authorization': f'Bearer {access_token}'
+    }
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+    if response.status_code!=200:
+        return HttpResponse(f'some thing went wrong! {response.status_code}')
+    data=response.json()
+    user_obj=User.objects.filter(email=data['email'])
+    if user_obj:
+        user_obj=user_obj[0]
+        serializer = UserSerializer(user_obj, context={'request': request})
+        data = serializer.data
+        token = get_token(user_obj)
+        return JsonResponse({"user": data, "token": token})
+    user_obj=User.objects.create(email=data['email'],
+                        first_name=data['given_name'],
+                        last_name=data['family_name'],
+                        mob_number=data['email'],
+                        profile_img=data['picture']
+                                 )
+    serializer = UserSerializer(user_obj, context={'request': request})
+
+    data = serializer.data
+    token = get_token(user_obj)
+
+    return JsonResponse({"user": data, "token": token})
+
+

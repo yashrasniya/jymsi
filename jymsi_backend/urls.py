@@ -17,9 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-
+from .home import Home
 
 urlpatterns = [
+
+path('', Home),
+path('accounts/', include('allauth.urls')),
     path('admin/', admin.site.urls),
     path('api/v1/', include('accounts.api.urls')),
     path('api/v1/', include('gym.api.urls')),
@@ -27,5 +30,6 @@ urlpatterns = [
     path('api/v1/', include('booking.api.urls')),
     path('api/v1/', include('about_zymsi.urls')),
     path('api-auth/', include('rest_framework.urls')),
+
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
