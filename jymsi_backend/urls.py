@@ -22,7 +22,7 @@ from .home import Home
 urlpatterns = [
 
 path('', Home),
-path('accounts/', include('allauth.urls')),
+# path('accounts/', include('allauth.urls')),
     path('admin/', admin.site.urls),
     path('api/v1/', include('accounts.api.urls')),
     path('api/v1/', include('gym.api.urls')),
