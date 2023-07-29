@@ -20,7 +20,7 @@ def error(message, **kwargs):
     error_message = {'message': message, 'status': False}
     if kwargs:
         error_message.update(**kwargs)
-    return error_message
+    return error_message,status.HTTP_400_BAD_REQUEST
 
 
 class login(APIView):
