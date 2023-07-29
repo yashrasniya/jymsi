@@ -17,6 +17,7 @@ class UserSerializer(serializers.ModelSerializer):
             'mob_number',
             'profile_img',
             'is_partner',
+            'mobile_verify'
         ]
     def get_profile_img(self,obj):
         request=self.context.get('request','')
@@ -46,14 +47,14 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'user_ID',
-
             'name',
             'first_name',
             'last_name',
             'email',
             'mob_number',
             'profile_img',
-            'is_partner'
+            'is_partner',
+            'mobile_verify'
         ]
 
     def update(self, instance, validated_data):

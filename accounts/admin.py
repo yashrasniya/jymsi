@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import *
-from .models import User,Superuser,Partner,All_User
+from .models import User
+from .dumy_model import Superuser,Partner,All_User
 # Register your models here.
 @admin.register(User)
 class User_admin(UserAdmin):

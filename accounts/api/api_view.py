@@ -174,23 +174,26 @@ class ip_filder(APIView):
         req=requests.get(url=f'https://api.ipgeolocation.io/ipgeo?apiKey={api_token}&ip={ip}')
         return Response({'sdf':req.json()})
 
+# import google_auth_oauthlib.flow
+# from django.shortcuts import redirect
+# from about_zymsi.models import GoogleLoginConfig
+# redirect_uri="http://localhost:3000/google/callback/"
+# client_id="549026914943-7v02pt7ng4kt8kiq1ecpsmolo1k1413b.apps.googleusercontent.com"
+# client_secret="MTB2VGfXaqx0iHLPfrWqgc6E"
+# try:
+#     if GoogleLoginConfig.objects.filter():
+#         GLC_obj=GoogleLoginConfig.objects.first()
+#     else:
+#         GLC_obj = GoogleLoginConfig.objects.create(
+#             client_id=client_id,
+#         client_secret=client_secret,
+#         redirect_uri=redirect_uri
+#         )
+# except django.db.utils.OperationalError as e:
+#     print(e)
+from .defult_tasks import GLC_obj
 import google_auth_oauthlib.flow
 from django.shortcuts import redirect
-from about_zymsi.models import GoogleLoginConfig
-redirect_uri="http://localhost:3000/google/callback/"
-client_id="549026914943-7v02pt7ng4kt8kiq1ecpsmolo1k1413b.apps.googleusercontent.com"
-client_secret="MTB2VGfXaqx0iHLPfrWqgc6E"
-try:
-    if GoogleLoginConfig.objects.filter():
-        GLC_obj=GoogleLoginConfig.objects.first()
-    else:
-        GLC_obj = GoogleLoginConfig.objects.create(
-            client_id=client_id,
-        client_secret=client_secret,
-        redirect_uri=redirect_uri
-        )
-except django.db.utils.OperationalError as e:
-    print(e)
 
 
 def googel_login(request):
@@ -308,12 +311,17 @@ class OTP_verify(APIView):
             return Response(error('your number is verified'))
         mob_number = request.GET.get('mob_number', False)
         otp = request.GET.get('otp', False)
+        is_partner = request.GET.get('is_partner', False)
+        if is_partner:
+            is_partner=True
         if not (mob_number and otp):
             return Response(error('mob_number and otp is must!!'))
         t = pyotp.TOTP(request.user.key)
         is_verified = t.verify(otp, valid_window=20)
         if not is_verified:
             return Response(error('otp is wrong!!'))
+        request.user.is_partner=is_partner
+        request.user.mobile_verify=True
         return Response(UserSerializer(request.user,context={'request': request}).data)
 
 
