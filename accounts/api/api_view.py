@@ -292,6 +292,8 @@ class Mobile_number_verify(APIView):
         if user_filter_obj:
             if user_filter_obj[0].is_active==False:
                 user_filter_obj[0].delete()
+            elif user_filter_obj[0].mobile_verify==False:
+                pass
             else:
                 return Response(error('number already exist!!'))
         request.user.mob_number=mob_number
