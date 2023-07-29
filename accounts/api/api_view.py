@@ -322,6 +322,7 @@ class OTP_verify(APIView):
             return Response(error('otp is wrong!!'))
         request.user.is_partner=is_partner
         request.user.mobile_verify=True
+        request.user.save()
         return Response(UserSerializer(request.user,context={'request': request}).data)
 
 
