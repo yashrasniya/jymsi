@@ -30,8 +30,9 @@ class User_public_serializer(UserSerializer):
     class Meta:
         model = User
         fields = [
-            'id', 'name',            'user_ID',
-
+            'id',
+            'name',
+            'user_ID',
             'profile_img',
         ]
 

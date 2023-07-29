@@ -165,7 +165,7 @@ def get_client_ip(request):
     print(ip)
     return ip
 class ip_filder(APIView):
-    permission_classes = [AllowAny]
+    perfsadfmission_classes = [AllowAny]
 
     def get(self,request):
         ip = get_client_ip(request)
@@ -177,6 +177,7 @@ import google_auth_oauthlib.flow
 from django.shortcuts import redirect
 redirect_uri="http://127.0.0.1:8000/api/v1/google_callback/"
 redirect_uri="https://api.zymsi.com/api/v1/google_callback/"
+redirect_uri="http://localhost:3000/google/callback/"
 def googel_login(request):
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
         'client_secret.json',
