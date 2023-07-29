@@ -101,3 +101,9 @@ class Image(models.Model):
         if gym_obj:
             return str(gym_obj[0].gym_ID)
         return '---------'
+
+class ZYM_read_only_model(Gym):
+    class Meta:
+        verbose_name = 'gym_read_only'
+        verbose_name_plural = 'All_gym_read_only'
+        proxy = True

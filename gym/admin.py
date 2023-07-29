@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (Gym, Facilities,
                      Trainer, Reviews,
-                     Timing,Image,Deals)
+                     Timing,Image,Deals,ZYM_read_only_model)
 from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.html import format_html
@@ -58,7 +58,7 @@ class Trainer_admin(admin.ModelAdmin):
 
 
 @admin.register(Reviews)
-class gym(admin.ModelAdmin):
+class Reviews(admin.ModelAdmin):
     list_display = ('user','reviews_text','rating','gym_id')
     search_fields = ('gym__gym_ID','reviews_text','user__mob_number')
 
@@ -78,3 +78,13 @@ class timing_admin(admin.ModelAdmin):
 class Deals_admin(admin.ModelAdmin):
     list_display = ('gym_id','months','price','discounted_price','discount')
     search_fields = ('gym__gym_ID','months','price','discounted_price','discount')
+
+@admin.register(ZYM_read_only_model)
+class ZYM_read_only(gym):
+    def has_change_permission(self,request,obj=None):
+        return False
+    def has_delete_permission(self,request,obj=None):
+        return False
+
+
+

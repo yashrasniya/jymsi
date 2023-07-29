@@ -13,6 +13,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import smtplib, ssl
 import random
+import django
 
 
 def error(message, **kwargs):
@@ -144,14 +145,14 @@ class UserProfileUpdate(APIView):
         print(type(request.data))
         ser = UserRegisterSerializer.update(UserRegisterSerializer(), request.user, validated_data=request.data)
 
-        return Response(UserSerializer(request.user).data)
+        return Response(UserSerializer(request.user,context={'request': request}).data)
 
 
 class UserProfile(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return Response(UserSerializer(request.user).data)
+        return Response(UserSerializer(request.user,context={'request': request}).data)
 
 import requests
 import json
@@ -175,15 +176,36 @@ class ip_filder(APIView):
 
 import google_auth_oauthlib.flow
 from django.shortcuts import redirect
-redirect_uri="http://127.0.0.1:8000/api/v1/google_callback/"
-redirect_uri="https://api.zymsi.com/api/v1/google_callback/"
+from about_zymsi.models import GoogleLoginConfig
 redirect_uri="http://localhost:3000/google/callback/"
+client_id="549026914943-7v02pt7ng4kt8kiq1ecpsmolo1k1413b.apps.googleusercontent.com"
+client_secret="MTB2VGfXaqx0iHLPfrWqgc6E"
+try:
+    if GoogleLoginConfig.objects.filter():
+        GLC_obj=GoogleLoginConfig.objects.first()
+    else:
+        GLC_obj = GoogleLoginConfig.objects.create(
+            client_id=client_id,
+        client_secret=client_secret,
+        redirect_uri=redirect_uri
+        )
+except django.db.utils.OperationalError as e:
+    print(e)
+
+
 def googel_login(request):
-    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        'client_secret.json',
+    flow = google_auth_oauthlib.flow.Flow.from_client_config(
+        {"web":
+             {"client_id": GLC_obj.client_id,
+              "project_id": "test-e3512",
+              "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+              "token_uri": "https://oauth2.googleapis.com/token",
+              "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+              "client_secret": GLC_obj.client_secret,
+              }},
         scopes=['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email'], )
 
-    flow.redirect_uri = redirect_uri
+    flow.redirect_uri = GLC_obj.redirect_uri
 
     authorization_url, state = flow.authorization_url(
 
@@ -192,8 +214,7 @@ def googel_login(request):
     )
     return redirect(authorization_url)
 
-client_id="549026914943-7v02pt7ng4kt8kiq1ecpsmolo1k1413b.apps.googleusercontent.com"
-client_secret="MTB2VGfXaqx0iHLPfrWqgc6E"
+
 
 from django.http.response import HttpResponse,JsonResponse
 def google_login_callback(request):
@@ -202,9 +223,9 @@ def google_login_callback(request):
         return HttpResponse('code not found')
     url = f"https://oauth2.googleapis.com/token?" \
           f"code={code}" \
-          f"&client_id={client_id}" \
-          f"&client_secret={client_secret}" \
-          f"&redirect_uri={redirect_uri}" \
+          f"&client_id={GLC_obj.client_id}" \
+          f"&client_secret={GLC_obj.client_secret}" \
+          f"&redirect_uri={GLC_obj.redirect_uri}" \
           f"&grant_type=authorization_code"
 
     payload = {}
@@ -213,7 +234,7 @@ def google_login_callback(request):
     }
     response = requests.request("POST", url, headers=headers, data=payload)
     if response.status_code!=200:
-        return HttpResponse(f'some thing went wrong! {response.status_code}')
+        return HttpResponse(f'some thing went wrong! {response.status_code} {response.text}')
     access_token=response.json()['access_token']
 
     url = "https://www.googleapis.com/oauth2/v1/userinfo?alt=json"
@@ -227,6 +248,7 @@ def google_login_callback(request):
     if response.status_code!=200:
         return HttpResponse(f'some thing went wrong! {response.status_code}')
     data=response.json()
+    print(data)
     user_obj=User.objects.filter(email=data['email'])
     if user_obj:
         user_obj=user_obj[0]
@@ -234,11 +256,17 @@ def google_login_callback(request):
         data = serializer.data
         token = get_token(user_obj)
         return JsonResponse({"user": data, "token": token})
+    n=True
+    while n:
+        ID = random.randint(100000, 999999)
+        if not User.objects.filter(user_ID=ID):
+            n = False
     user_obj=User.objects.create(email=data['email'],
                         first_name=data['given_name'],
                         last_name=data['family_name'],
                         mob_number=data['email'],
-                        profile_img=data['picture']
+                        profile_img=data['picture'],
+                        user_ID=ID
                                  )
     serializer = UserSerializer(user_obj, context={'request': request})
 
@@ -246,5 +274,47 @@ def google_login_callback(request):
     token = get_token(user_obj)
 
     return JsonResponse({"user": data, "token": token})
+
+
+class Mobile_number_verify(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request):
+        if request.user.mobile_verify:
+            return Response(error('your number is verified'))
+        mob_number=request.GET.get('mob_number','')
+        if not mob_number:
+            return Response(error('mob_number is not provided'))
+        user_filter_obj=User.objects.filter(mob_number=mob_number)
+        if user_filter_obj:
+            if user_filter_obj[0].is_active==False:
+                user_filter_obj[0].delete()
+            else:
+                return Response(error('number already exist!!'))
+        request.user.mob_number=mob_number
+        request.user.save()
+        time_otp = pyotp.TOTP(request.user.key)
+        time_otp = time_otp.now()
+        if not mob_number=='1988888888' or mob_number=='9999999999':
+            send_sms(mob_number, time_otp)
+        return Response({'status': '200', 'message': 'Please verify your mobile to complete signup.', 'otp': time_otp},
+                        status.HTTP_200_OK)
+
+class OTP_verify(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request):
+        if request.user.mobile_verify:
+            return Response(error('your number is verified'))
+        mob_number = request.GET.get('mob_number', False)
+        otp = request.GET.get('otp', False)
+        if not (mob_number and otp):
+            return Response(error('mob_number and otp is must!!'))
+        t = pyotp.TOTP(request.user.key)
+        is_verified = t.verify(otp, valid_window=20)
+        if not is_verified:
+            return Response(error('otp is wrong!!'))
+        return Response(UserSerializer(request.user,context={'request': request}).data)
+
 
 

@@ -19,10 +19,13 @@ class UserSerializer(serializers.ModelSerializer):
             'is_partner',
         ]
     def get_profile_img(self,obj):
+        request=self.context.get('request','')
         if obj.profile_img:
             if 'https' in str(obj.profile_img.url):
                 return str(obj.profile_img)
             else:
+                if request:
+                    return request.build_absolute_uri(str(obj.profile_img.url))
                 return str(obj.profile_img.url)
 
 

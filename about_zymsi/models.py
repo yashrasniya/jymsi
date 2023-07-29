@@ -9,4 +9,7 @@ class About(models.Model):
     Partner_Email=models.EmailField()
     default_img=models.ImageField(upload_to='about/default')
 
-
+class GoogleLoginConfig(models.Model):
+    client_id=models.CharField(max_length=400)
+    client_secret=models.CharField(max_length=400)
+    redirect_uri=models.CharField(max_length=400)
