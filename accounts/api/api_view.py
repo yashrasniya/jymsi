@@ -227,14 +227,18 @@ def googel_login(request):
 from django.http.response import HttpResponse,JsonResponse
 def google_login_callback(request):
     code=request.GET.get('code',False)
+    redirect_uri=GLC_obj.redirect_uri
+    if request.GET.get('is_partner', False):
+        redirect_uri = GLC_obj.redirect_uri_partner
+
     if not code:
         return HttpResponse('code not found')
     url = f"https://oauth2.googleapis.com/token?" \
           f"code={code}" \
           f"&client_id={GLC_obj.client_id}" \
           f"&client_secret={GLC_obj.client_secret}" \
-          f"&redirect_uri={GLC_obj.redirect_uri}" \
-          f"&grant_type=authorization_code"
+          f"&grant_type=authorization_code" \
+          # f"&redirect_uri={redirect_uri}" \
 
     payload = {}
     headers = {
