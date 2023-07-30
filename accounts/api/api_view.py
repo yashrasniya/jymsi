@@ -238,7 +238,7 @@ def google_login_callback(request):
           f"&client_id={GLC_obj.client_id}" \
           f"&client_secret={GLC_obj.client_secret}" \
           f"&grant_type=authorization_code" \
-          # f"&redirect_uri={redirect_uri}" \
+          f"&redirect_uri={redirect_uri}" \
 
     payload = {}
     headers = {
