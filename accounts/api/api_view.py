@@ -197,6 +197,9 @@ from django.shortcuts import redirect
 
 
 def googel_login(request):
+    is_partner=False
+    if request.GET.get('is_partner',False):
+        is_partner=True
     flow = google_auth_oauthlib.flow.Flow.from_client_config(
         {"web":
              {"client_id": GLC_obj.client_id,
@@ -207,8 +210,10 @@ def googel_login(request):
               "client_secret": GLC_obj.client_secret,
               }},
         scopes=['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email'], )
-
-    flow.redirect_uri = GLC_obj.redirect_uri
+    if is_partner:
+        flow.redirect_uri = GLC_obj.redirect_uri_partner
+    else:
+        flow.redirect_uri = GLC_obj.redirect_uri
 
     authorization_url, state = flow.authorization_url(
 

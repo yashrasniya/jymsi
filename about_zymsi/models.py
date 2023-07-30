@@ -13,3 +13,4 @@ class GoogleLoginConfig(models.Model):
     client_id=models.CharField(max_length=400)
     client_secret=models.CharField(max_length=400)
     redirect_uri=models.CharField(max_length=400)
+    redirect_uri_partner=models.CharField(max_length=400)
