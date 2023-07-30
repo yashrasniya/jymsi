@@ -16,6 +16,7 @@ class User_admin(UserAdmin):
                     "is_staff",
                     "is_superuser",
                     "is_partner",
+                    "mobile_verify",
                     # "user_permissions",
                 ),
             },
