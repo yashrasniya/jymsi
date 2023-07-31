@@ -4,6 +4,7 @@ from .models import (Gym, Facilities,
                      Timing,Image,Deals,ZYM_read_only_model)
 from django.urls import reverse
 from django.utils.http import urlencode
+from django.contrib.admin.utils import flatten_fieldsets
 from django.utils.html import format_html
 
 
@@ -46,8 +47,14 @@ class gym(admin.ModelAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         fields = []
+        for i in obj._meta.local_fields:
+            fields.append(i.__str__().split('.')[2])
+        for i in obj._meta.local_many_to_many:
+            fields.append(i.__str__().split('.')[2])
+
+        print(fields)
         if request.user.has_perm('gym.Visible'):
-            fields += ['visible']
+            fields.remove('visible')
             self.readonly_fields = fields
         print(self.readonly_fields, request.user.has_perm('gym.Visible'))
         return super(gym, self).get_form(request, obj, **kwargs)
