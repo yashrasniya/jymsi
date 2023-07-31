@@ -2,11 +2,17 @@ from django.db import models
 from accounts.models import User
 import datetime
 from django.utils import timezone
-
+import random
 # Create your models here.
-
+def random_id():
+    n = True
+    while n:
+        ID = random.randint(100000, 999999)
+        if not Gym.objects.filter(gym_ID=f"ZYM{ID}"):
+            n = False
+    return f"ZYM{ID}"
 class Gym(models.Model):
-    gym_name = models.CharField(max_length=100)
+    gym_name = models.CharField(max_length=100,default=random_id)
     gym_ID = models.CharField(max_length=100)
     user = models.ForeignKey('accounts.User',on_delete=models.CASCADE,null=True)
     gym_address = models.TextField(max_length=100)
@@ -53,7 +59,7 @@ class Trainer(models.Model):
 class Reviews(models.Model):
     reviews_text = models.TextField(max_length=1000)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    dateTime = models.DateTimeField(default=timezone.now())
+    dateTime = models.DateTimeField(default=datetime.datetime.now)
     rating = (
         ('-----', '-----'),
         ('1', '1'),
@@ -71,6 +77,12 @@ class Reviews(models.Model):
         if gym_obj:
             return str(gym_obj[0].gym_ID)
         return '---------'
+    def __str__(self):
+        n=60
+        string=str(self.id)+' '+str(self.reviews_text)
+        if len(string)>n:
+            return string[:n]
+        return string
 
 class Timing(models.Model):
     type = models.CharField(choices=(
@@ -84,6 +96,9 @@ class Timing(models.Model):
         if gym_obj:
             return str(gym_obj[0].gym_ID)
         return '---------'
+    def __str__(self):
+
+        return str(self.opening)+" "+str(self.closing)
 
 class Deals(models.Model):
     months = models.CharField(max_length=200)
@@ -95,6 +110,8 @@ class Deals(models.Model):
         if gym_obj:
             return str(gym_obj[0].gym_ID)
         return '---------'
+    def __str__(self):
+        return str(self.months)+" "+str(self.price)+" "+str(self.discounted_price)+" "+str(self.discount)
 
 class Image(models.Model):
     image = models.ImageField(upload_to='gym_images')
@@ -103,6 +120,12 @@ class Image(models.Model):
         if gym_obj:
             return str(gym_obj[0].gym_ID)
         return '---------'
+
+    def __str__(self):
+        if self.image:
+            return str(self.image.name)
+        return str(self.image)
+
 
 class ZYM_read_only_model(Gym):
     class Meta:

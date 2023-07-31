@@ -3,6 +3,13 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 import random
 
 # Create your models here.
+def user_id_create():
+    n = True
+    while n:
+        ID = random.randint(100000, 999999)
+        if not User.objects.filter(user_ID=ID):
+            n = False
+    return ID
 class UserManager(BaseUserManager):
     def create_superuser(self, mob_number, email='', password=None, **extra_fields):
 
@@ -26,8 +33,8 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    mob_number = models.CharField(max_length=150, unique=True,default=str(random.random()))
-    user_ID = models.CharField(max_length=100,null=True)
+    mob_number = models.CharField(max_length=150, unique=True,default=(lambda a=random.random() : int(a*10000000000)))
+    user_ID = models.CharField(max_length=100,null=True,default=user_id_create)
 
     key = models.CharField(max_length=64)
     profile_img=models.ImageField(upload_to="user/profile",blank=True)
