@@ -12,8 +12,8 @@ def random_id():
             n = False
     return f"ZYM{ID}"
 class Gym(models.Model):
-    gym_name = models.CharField(max_length=100,default=random_id)
-    gym_ID = models.CharField(max_length=100)
+    gym_name = models.CharField(max_length=100)
+    gym_ID = models.CharField(max_length=100,default=random_id)
     user = models.ForeignKey('accounts.User',on_delete=models.CASCADE,null=True)
     gym_address = models.TextField(max_length=100)
     gym_state=models.CharField(max_length=50)
