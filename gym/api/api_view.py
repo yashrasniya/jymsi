@@ -52,7 +52,7 @@ class Gym_create(APIView):
 
         gym_serializer.update(gym_serializer(), gym_obj, request.data)
 
-        return Response(gym_serializer(gym_obj,context={'user':request.user,'request':request}).data)
+        return Response(gym_serializer(gym_obj,context={'user':request.user}).data)
 
 
 class My_Gym(APIView):
