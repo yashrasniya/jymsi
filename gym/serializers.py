@@ -100,7 +100,7 @@ class reviews_serializer(serializers.ModelSerializer):
         ]
 
     def get_user(self, obj):
-        return User_public_serializer(obj.user).data
+        return User_public_serializer(obj.user,context=self.context).data
     def get_permission(self,obj):
         if self.context.get('user',''):
             return True if obj.user==self.context.get('user') else False
