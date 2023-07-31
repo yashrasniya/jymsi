@@ -27,6 +27,8 @@ class Gym(models.Model):
     visible=models.BooleanField(default=False)
     def __str__(self):
         return str(self.gym_ID)
+    class Meta:
+        permissions=(("Visible","Visible change"),)
 
 
 class Facilities(models.Model):

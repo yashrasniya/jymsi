@@ -191,12 +191,13 @@ class ip_filder(APIView):
 #         )
 # except django.db.utils.OperationalError as e:
 #     print(e)
-from .defult_tasks import GLC_obj
+from .defult_tasks import google_login
 import google_auth_oauthlib.flow
 from django.shortcuts import redirect
 
 
 def googel_login(request):
+    GLC_obj=google_login()
     is_partner=False
     if request.GET.get('is_partner',False):
         is_partner=True
@@ -226,6 +227,7 @@ def googel_login(request):
 
 from django.http.response import HttpResponse,JsonResponse
 def google_login_callback(request):
+    GLC_obj = google_login()
     code=request.GET.get('code',False)
     redirect_uri=GLC_obj.redirect_uri
     if request.GET.get('is_partner', False):
@@ -323,15 +325,15 @@ class OTP_verify(APIView):
         mob_number = request.GET.get('mob_number', False)
         otp = request.GET.get('otp', False)
         is_partner = request.GET.get('is_partner', False)
-        if is_partner:
-            is_partner=True
+
         if not (mob_number and otp):
             return Response(error('mob_number and otp is must!!'))
         t = pyotp.TOTP(request.user.key)
         is_verified = t.verify(otp, valid_window=20)
         if not is_verified:
             return Response(error('otp is wrong!!'))
-        request.user.is_partner=is_partner
+        if is_partner:
+            request.user.is_partner=True
         request.user.mobile_verify=True
         request.user.save()
         return Response(UserSerializer(request.user,context={'request': request}).data)

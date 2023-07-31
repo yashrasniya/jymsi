@@ -38,8 +38,8 @@ def main():
 
     print("Sending SMS message.")
     message_id = send_sms_message(
-        boto3.client('pinpoint',region_name='us-east-1',aws_access_key_id='AKIAU6PMEMPLLLNMFPTV',
-                     aws_secret_access_key='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'), app_id, origination_number, destination_number,
+        boto3.client('pinpoint',region_name='us-east-1',aws_access_key_id='AKIAU6PMEMPLLLNMFPTVCC',
+                     aws_secret_access_key='zWiI8wfRtk+Oq3R+um5bMVe6S00/D3vojlPpULOgo1'), app_id, origination_number, destination_number,
         message, message_type)
     print(f"Message sent! Message ID: {message_id}.")
 

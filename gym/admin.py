@@ -28,9 +28,7 @@ class gym(admin.ModelAdmin):
                     'gym_city','gym_address','gym_state',
                     'gym_city','gym_PinCode','gym_mobile_number',
                     'gym_landLine_number','gym_description')
-    fields = (
 
-    )
     filter_horizontal=('gym_images','gym_trainer',
                        'gym_reviews','gym_timing',
                        'gym_deals','gym_facilities'
@@ -45,6 +43,22 @@ class gym(admin.ModelAdmin):
             url=f"/admin/accounts/all_user/{obj.user.pk}/change/"
             mob_number=user.mob_number
         return format_html('<a href="{}">{}</a>', url, mob_number)
+
+    def get_form(self, request, obj=None, **kwargs):
+        fields = []
+        if request.user.has_perm('gym.Visible'):
+            fields += ['visible']
+            self.readonly_fields = fields
+        print(self.readonly_fields, request.user.has_perm('gym.Visible'))
+        return super(gym, self).get_form(request, obj, **kwargs)
+
+    # def get_changelist(self, request, **kwargs):
+    #     fields = []  # Default fields for everyone
+    #     if request.user.has_perm('gym.Visible'):  # Check if User IS in group
+    #         fields += ['visible','gym_name']  # Add field that is associated with group to list
+    #         self.list_editable = fields
+    #     print(self.list_editable,request.user.has_perm('gym.Visible'),request.user)
+    #     return super(gym, self).get_changelist(request, **kwargs)
 
 @admin.register(Facilities)
 class Facilities_admin(admin.ModelAdmin):

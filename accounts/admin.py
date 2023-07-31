@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import *
 from .models import User
 from .dumy_model import Superuser,Partner,All_User
+from django.db.models import Q
 # Register your models here.
 @admin.register(User)
 class User_admin(UserAdmin):
@@ -37,7 +38,7 @@ class User_admin(UserAdmin):
     search_fields=('mob_number','user_ID', "first_name", "last_name", "email")
     ordering = ("mob_number",)
     def get_queryset(self, request):
-        return self.model.objects.filter(is_superuser=False,is_partner=False)
+        return self.model.objects.filter(is_superuser=False,is_partner=False,is_staff=False)
 
 @admin.register(Partner)
 class partner(User_admin):
@@ -57,13 +58,15 @@ class admin_users(User_admin):
                     "is_superuser",
                     "is_partner",
                     "user_permissions",
+                    "groups",
                 ),
             },
         ),
         # (("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
+    list_display=("mob_number", "name","is_superuser","is_staff",'email')
     def get_queryset(self, request):
-        return self.model.objects.filter(is_superuser=True)
+        return self.model.objects.filter(Q(is_superuser=True)| Q(is_staff=True))
 
 class AllUserAdmin(User_admin):
     def get_queryset(self, request):
