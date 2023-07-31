@@ -25,9 +25,9 @@ class Gym_view(APIView):
     def get(self, request, gym_id=None):
         if not gym_id:
 
-            ser = gym_serializer(Gym.objects.filter(visible=True), many=True,context={'user':request.user})
+            ser = gym_serializer(Gym.objects.filter(visible=True), many=True,context={'user':request.user,'request':request})
         else:
-            ser = gym_serializer(Gym.objects.filter(gym_ID=gym_id,visible=True), many=True,context={'user':request.user})
+            ser = gym_serializer(Gym.objects.filter(gym_ID=gym_id,visible=True), many=True,context={'user':request.user,'request':request})
         return Response(ser.data)
 
 
@@ -52,7 +52,7 @@ class Gym_create(APIView):
 
         gym_serializer.update(gym_serializer(), gym_obj, request.data)
 
-        return Response(gym_serializer(gym_obj).data)
+        return Response(gym_serializer(gym_obj,context={'user':request.user,'request':request}).data)
 
 
 class My_Gym(APIView):
@@ -84,7 +84,7 @@ class Gym_Image_add(APIView):
         Image_serializer.update(Image_serializer(), img_obj, request.data)
         gym_obj.gym_images.add(img_obj)
         gym_obj.save()
-        return Response(gym_serializer(gym_obj).data)
+        return Response(gym_serializer(gym_obj,context={'user':request.user,'request':request}).data)
 
 
 class Gym_Image_remove(APIView):
@@ -100,7 +100,7 @@ class Gym_Image_remove(APIView):
 
         print(img_obj)
         img_obj[0].delete()
-        return Response(gym_serializer(gym_obj).data)
+        return Response(gym_serializer(gym_obj,context={'user':request.user,'request':request}).data)
 
 
 class facilities_view(APIView):
@@ -160,7 +160,7 @@ class Gym_trainer_action(APIView):
                 return Response(error('id not found in you gym profile'))
             trainer_serializer().update(tar_obj[0], request.data)
 
-        return Response(gym_serializer(gym_obj).data)
+        return Response(gym_serializer(gym_obj,context={'user':request.user,'request':request}).data)
 
 
 class Review_action(APIView):
@@ -178,7 +178,7 @@ class Review_action(APIView):
                 obj = ser.save(user=request.user)
 
                 gym_obj.gym_reviews.add(obj)
-                return Response(gym_serializer(gym_obj,context={'user':request.user}).data,)
+                return Response(gym_serializer(gym_obj,context={'user':request.user,'request':request}).data,)
 
             else:
                 return Response(error("error", error=ser.errors))
@@ -186,7 +186,7 @@ class Review_action(APIView):
             review_obj = Reviews.objects.filter(id=review_id,user=request.user)
             if review_obj:
                 review_obj[0].delete()
-                return Response(gym_serializer(gym_obj).data)
+                return Response(gym_serializer(gym_obj,context={'user':request.user,'request':request}).data)
             else:
                 return Response(error('review id not found!'))
         elif action == 'edit':
@@ -195,7 +195,7 @@ class Review_action(APIView):
                 ser = reviews_serializer(review_obj[0], data=request.data)
                 if ser.is_valid():
                     ser.save(user=request.user)
-                    return Response(gym_serializer(gym_obj,context={'user':request.user}).data)
+                    return Response(gym_serializer(gym_obj,context={'user':request.user,'request':request}).data)
 
                 else:
                     return Response(error("error", error=ser.errors))
@@ -236,7 +236,7 @@ class timing_view(APIView):
                 return Response(error("error", error=ser.errors))
         else:
             time_obj.delete()
-        return Response(gym_serializer(gym_obj).data)
+        return Response(gym_serializer(gym_obj,context={'user':request.user,'request':request}).data)
 
 
 class Deals_action(APIView):
@@ -268,7 +268,7 @@ class Deals_action(APIView):
             else:
                 return Response(error("error", error=ser.errors))
 
-        return Response(gym_serializer(gym_obj).data)
+        return Response(gym_serializer(gym_obj,context={'user':request.user,'request':request}).data)
 
 
 class personal_number(APIView):
@@ -284,4 +284,4 @@ class personal_number(APIView):
         if request.data.get('gym_landLine_number', ''):
             gym_obj.gym_landLine_number = request.data.get('gym_landLine_number', '')
         gym_obj.save()
-        return Response(gym_serializer(gym_obj).data)
+        return Response(gym_serializer(gym_obj,context={'user':request.user,'request':request}).data)
