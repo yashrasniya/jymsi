@@ -206,10 +206,11 @@ class gym_serializer(serializers.ModelSerializer):
                     print(is_valid)
                     if is_valid.days >= 0:
                         return True
+            elif Free_trial.objects.filter(user=user, gym=obj, valid=False, cancel=False):
+                return 'Verified'
             else:
                 return False
-            if Free_trial.objects.filter(user=user, gym=obj, valid=False, cancel=False):
-                return 'Verified'
+
         return False
     def get_gym_reviews(self,obj):
         return reviews_serializer(obj.gym_reviews,many=True,context=self.context).data
