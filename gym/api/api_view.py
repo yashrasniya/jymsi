@@ -62,8 +62,8 @@ class My_Gym(APIView):
         print("sdf")
         gym_obj, boll = partner_check(request)
         if boll: return gym_obj
-        print({'gym_created':True if gym_obj else False,'gym':my_gym(gym_obj,context={'user':request.user,'request':request}).data})
-        return Response({'gym_created':True if gym_obj else False,'gym':my_gym(gym_obj).data})
+        # print({'gym_created':True if gym_obj else False,'gym':my_gym(gym_obj,context={'user':request.user,'request':request}).data})
+        return Response({'gym_created':True if gym_obj else False,'gym':my_gym(gym_obj,context={'user':request.user,'request':request}).data})
 
 
 class Gym_Image_add(APIView):
