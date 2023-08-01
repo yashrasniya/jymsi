@@ -52,7 +52,7 @@ class Gym_create(APIView):
 
         gym_serializer.update(gym_serializer(), gym_obj, request.data)
 
-        return Response(gym_serializer(gym_obj,context={'user':request.user}).data)
+        return Response(gym_serializer(gym_obj,context={'user':request.user,'request':request}).data)
 
 
 class My_Gym(APIView):
@@ -62,7 +62,7 @@ class My_Gym(APIView):
         print("sdf")
         gym_obj, boll = partner_check(request)
         if boll: return gym_obj
-        print({'gym_created':True if gym_obj else False,'gym':my_gym(gym_obj).data})
+        print({'gym_created':True if gym_obj else False,'gym':my_gym(gym_obj,context={'user':request.user,'request':request}).data})
         return Response({'gym_created':True if gym_obj else False,'gym':my_gym(gym_obj).data})
 
 
@@ -107,7 +107,7 @@ class facilities_view(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        return Response(facilities_serializer(Facilities.objects.all(), many=True,context={'user':request.user}).data)
+        return Response(facilities_serializer(Facilities.objects.all(), many=True,context={'user':request.user,'request':request}).data)
 
 
 class facilities_action(APIView):
